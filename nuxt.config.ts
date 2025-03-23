@@ -19,8 +19,8 @@ export default defineNuxtConfig({
         // Facebook Open Graph meta tags
         { property: 'og:title', content: 'John Lerry T.' },
         { property: 'og:description', content: 'Welcome to my portfolio website showcasing my projects, skills, and experience.' },
-        { property: 'og:image', content: '/images/tb.jpg' }, // Replace with your actual thumbnail path
-        { property: 'og:url', content: 'https://johnlerryt.vercel.app' }, // Replace with your actual domain
+        { property: 'og:image', content: 'https://johnlerryt.vercel.app/images/tb.jpg' },
+        { property: 'og:url', content: 'https://johnlerryt.vercel.app' },
         { property: 'og:type', content: 'website' },
         { property: 'og:site_name', content: 'John Lerry T.' }
       ]
