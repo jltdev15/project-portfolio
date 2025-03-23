@@ -77,23 +77,25 @@
       <div class="flex flex-col sm:flex-row justify-center items-center gap-6 animate-fade-in-delay-4">
         <a href="#projects"
           class="group w-full sm:w-auto inline-flex items-center justify-center px-10 py-4 bg-white/10 backdrop-blur-sm text-white rounded-full font-semibold hover:bg-white/20 transition-all duration-300 transform hover:scale-105 hover:shadow-xl"
-          @click.prevent="scrollToSection('#projects')">
+          @click.prevent="scrollToSection('#projects')"
+          aria-label="View my projects">
           <span class="relative">
             View Projects
             <span
               class="absolute bottom-0 left-0 w-0 h-0.5 bg-white group-hover:w-full transition-all duration-300"></span>
           </span>
-          <ArrowRightIcon class="w-6 h-6 ml-3 transform group-hover:translate-x-1 transition-transform duration-300" />
+          <ArrowRightIcon class="w-6 h-6 ml-3 transform group-hover:translate-x-1 transition-transform duration-300" aria-hidden="true" />
         </a>
         <a href="#contact"
           class="group w-full sm:w-auto inline-flex items-center justify-center px-10 py-4 border-2 border-white/20 text-white rounded-full font-semibold hover:bg-white hover:text-blue-900 transition-all duration-300 transform hover:scale-105 hover:shadow-xl"
-          @click.prevent="scrollToSection('#contact')">
+          @click.prevent="scrollToSection('#contact')"
+          aria-label="Contact me">
           <span class="relative">
             Contact Me
             <span
               class="absolute bottom-0 left-0 w-0 h-0.5 bg-blue-900 group-hover:w-full transition-all duration-300"></span>
           </span>
-          <EnvelopeIcon class="w-6 h-6 ml-3 transform group-hover:translate-x-1 transition-transform duration-300" />
+          <EnvelopeIcon class="w-6 h-6 ml-3 transform group-hover:translate-x-1 transition-transform duration-300" aria-hidden="true" />
         </a>
       </div>
     </div>
