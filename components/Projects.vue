@@ -116,7 +116,7 @@ const projects = [
     description: 'A web-based queue management system with an integrated Android kiosk app. Users can join queues remotely, track their status in real-time, and receive notifications. The kiosk app, installed on an ESC/POS thermal printer tablet, enables on-site ticket printing and queue management.',
     image: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSVjL16oNPpccAGrGMXi4wGVFFvoqFJX8DVug&s',
     technologies: ['Vue.js', 'Capacitor', 'Google Firebase','Tailwind css','Android', 'Ionic'],
-    linkUrl: 'https://github.com/yourusername/queue-system'
+    linkUrl: 'https://github.com/jltdev15/todoApp'
   }
 ]
 </script>
