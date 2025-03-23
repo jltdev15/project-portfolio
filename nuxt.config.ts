@@ -15,7 +15,14 @@ export default defineNuxtConfig({
       title: 'John Lerry T.',
       meta: [
         { name: 'description', content: 'Welcome to my portfolio website showcasing my projects, skills, and experience.' },
-        { name: 'keywords', content: 'portfolio, web developer, projects, skills' }
+        { name: 'keywords', content: 'portfolio, web developer, projects, skills' },
+        // Facebook Open Graph meta tags
+        { property: 'og:title', content: 'John Lerry T.' },
+        { property: 'og:description', content: 'Welcome to my portfolio website showcasing my projects, skills, and experience.' },
+        { property: 'og:image', content: '/images/tb.jpg' }, // Replace with your actual thumbnail path
+        { property: 'og:url', content: 'https://johnlerryt.vercel.app' }, // Replace with your actual domain
+        { property: 'og:type', content: 'website' },
+        { property: 'og:site_name', content: 'John Lerry T.' }
       ]
     }
   },
