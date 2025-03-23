@@ -4,6 +4,18 @@ import tailwindcss from "@tailwindcss/vite";
 export default defineNuxtConfig({
   compatibilityDate: '2024-11-01',
   devtools: { enabled: true },
+  ssr: true, // Explicitly enable SSR
+  app: {
+    head: {
+      charset: 'utf-8',
+      viewport: 'width=device-width, initial-scale=1',
+      title: 'John Lerry T.',
+      meta: [
+        { name: 'description', content: 'Welcome to my portfolio website showcasing my projects, skills, and experience.' },
+        { name: 'keywords', content: 'portfolio, web developer, projects, skills' }
+      ]
+    }
+  },
   css: ['~/assets/css/main.css'],
   modules: ['@nuxt/image'],
   image: {

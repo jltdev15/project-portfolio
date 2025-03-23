@@ -61,7 +61,7 @@
               </div>
               <div class="p-8">
                 <h3 class="text-2xl font-semibold mb-4 text-gray-900 group-hover:text-blue-600 transition-colors duration-300">{{ project.title }}</h3>
-                <p class="text-gray-600 mb-6 leading-relaxed">{{ project.description }}</p>
+                <p class="text-gray-600 mb-6 leading-relaxed text-justify">{{ project.description }}</p>
                 <div class="flex flex-wrap gap-2">
                   <span 
                     v-for="(tech, techIndex) in project.technologies" 
