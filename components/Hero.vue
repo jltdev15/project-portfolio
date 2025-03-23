@@ -99,9 +99,9 @@
           </span>
           <ArrowRightIcon class="w-6 h-6 ml-3 transform group-hover:translate-x-1 transition-transform duration-300" aria-hidden="true" />
         </a>
-        <a href="#contact"
+        <button
           class="group w-full sm:w-auto inline-flex items-center justify-center px-10 py-4 border-2 border-white/20 text-white rounded-full font-semibold hover:bg-white hover:text-blue-900 transition-all duration-300 transform hover:scale-105 hover:shadow-xl"
-          @click.prevent="scrollToSection('#contact')"
+          @click="openSurveyModal"
           aria-label="Contact me">
           <span class="relative">
             Contact Me
@@ -109,14 +109,39 @@
               class="absolute bottom-0 left-0 w-0 h-0.5 bg-blue-900 group-hover:w-full transition-all duration-300"></span>
           </span>
           <EnvelopeIcon class="w-6 h-6 ml-3 transform group-hover:translate-x-1 transition-transform duration-300" aria-hidden="true" />
-        </a>
+        </button>
       </div>
+
+      <!-- Survey Modal -->
+      <SurveyModal 
+        :is-open="isSurveyModalOpen"
+        @close="closeSurveyModal"
+        @submit="handleSurveySubmit"
+      />
     </div>
   </section>
 </template>
 
 <script setup>
 import { ArrowRightIcon, EnvelopeIcon } from '@heroicons/vue/24/outline'
+import { ref } from 'vue'
+
+const isSurveyModalOpen = ref(false)
+
+const openSurveyModal = () => {
+  isSurveyModalOpen.value = true
+}
+
+const closeSurveyModal = () => {
+  isSurveyModalOpen.value = false
+}
+
+const handleSurveySubmit = (formData) => {
+  // Here you can handle the form submission
+  // For example, send it to your backend or email service
+  console.log('Survey submitted:', formData)
+  // You can add your API call here
+}
 
 const scrollToSection = (sectionId) => {
   const element = document.querySelector(sectionId)
