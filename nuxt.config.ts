@@ -22,7 +22,8 @@ export default defineNuxtConfig({
         { property: 'og:image', content: 'https://johnlerryt.vercel.app/images/tb.jpg' },
         { property: 'og:url', content: 'https://johnlerryt.vercel.app' },
         { property: 'og:type', content: 'website' },
-        { property: 'og:site_name', content: 'John Lerry T.' }
+        { property: 'og:site_name', content: 'John Lerry T.' },
+        { property: 'fb:app_id', content: '1086768433255411' }
       ]
     }
   },
