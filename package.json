@@ -11,6 +11,7 @@
   },
   "dependencies": {
     "@heroicons/vue": "^2.2.0",
+    "@nuxtjs/sitemap": "^7.2.9",
     "@tailwindcss/vite": "^4.0.15",
     "nuxt": "^3.16.1",
     "nuxt-icon": "^1.0.0-beta.7",

@@ -24,6 +24,7 @@
             Skills & Technologies
           </h2>
           <div class="w-24 h-1 bg-gradient-to-r from-blue-600 to-purple-600 mx-auto rounded-full"></div>
+          <p class="text-xl text-gray-600 mt-6 max-w-2xl mx-auto">A comprehensive overview of my technical expertise and professional capabilities</p>
         </div>
 
         <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">

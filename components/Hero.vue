@@ -16,16 +16,29 @@
     <div class="container mx-auto px-4 text-center text-white relative z-10">
       <!-- Profile Image with enhanced styling -->
       <div class="flex justify-center mb-12">
-        <div class="relative group">
+        <div class="relative group perspective-1000">
           <div
             class="absolute inset-0 bg-gradient-to-r from-blue-500 to-purple-500 rounded-full blur-2xl opacity-50 animate-pulse">
           </div>
           <div
             class="absolute inset-0 bg-gradient-to-r from-blue-500 to-purple-500 rounded-full opacity-0 group-hover:opacity-100 transition-opacity duration-500 blur-xl">
           </div>
-          <NuxtImg src="/images/profile.jpg" alt="Profile"
-            class="w-40 h-40 rounded-full border-4 border-white/20 shadow-2xl relative z-10 transform group-hover:scale-105 transition-all duration-500"
-            preset="avatar" loading="lazy" />
+          <div class="relative w-40 h-40 transform-style-3d animate-flip">
+            <NuxtImg 
+              src="/images/profile.png" 
+              alt="Profile"
+              class="absolute w-full h-full rounded-full border-4 border-white/20 shadow-2xl backface-hidden"
+              preset="avatar" 
+              loading="lazy" 
+            />
+            <NuxtImg 
+              src="/images/avatar2.webp" 
+              alt="Profile 2"
+              class="absolute w-full h-full rounded-full border-4 border-white/20 shadow-2xl backface-hidden rotate-y-180"
+              preset="avatar" 
+              loading="lazy" 
+            />
+          </div>
         </div>
       </div>
 
@@ -179,5 +192,48 @@ const scrollToSection = (sectionId) => {
   50% {
     transform: translateY(-20px);
   }
+}
+
+.perspective-1000 {
+  perspective: 1000px;
+}
+
+.transform-style-3d {
+  transform-style: preserve-3d;
+}
+
+.backface-hidden {
+  backface-visibility: hidden;
+}
+
+.rotate-y-180 {
+  transform: rotateY(180deg);
+}
+
+@keyframes flip {
+  0% {
+    transform: rotateY(0deg);
+  }
+  45% {
+    transform: rotateY(0deg);
+  }
+  50% {
+    transform: rotateY(180deg);
+  }
+  95% {
+    transform: rotateY(180deg);
+  }
+  100% {
+    transform: rotateY(360deg);
+  }
+}
+
+.animate-flip {
+  animation: flip 6s ease-in-out infinite;
+}
+
+/* Pause animation on hover */
+.group:hover .animate-flip {
+  animation-play-state: paused;
 }
 </style> 

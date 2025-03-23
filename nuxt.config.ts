@@ -28,7 +28,19 @@ export default defineNuxtConfig({
     }
   },
   css: ['~/assets/css/main.css'],
-  modules: ['@nuxt/image'],
+  modules: ['@nuxt/image', '@nuxtjs/sitemap'],
+  runtimeConfig: {
+    public: {
+      siteUrl: 'https://johnlerryt.vercel.app'
+    }
+  },
+  sitemap: {
+    defaults: {
+      changefreq: 'daily',
+      priority: 0.7,
+      lastmod: new Date().toISOString()
+    }
+  },
   image: {
     // The screen sizes predefined by `@nuxt/image`:
     screens: {
