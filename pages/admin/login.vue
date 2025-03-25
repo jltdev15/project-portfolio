@@ -95,8 +95,9 @@ const handleLogin = async () => {
       throw new Error(data.message || 'Login failed')
     }
 
-    // Store user data in localStorage
+    // Store user data and authentication state in localStorage
     localStorage.setItem('user', JSON.stringify(data.user))
+    localStorage.setItem('isAuthenticated', 'true')
     router.push('/admin/projects')
   } catch (err) {
     error.value = err.message || 'Login failed'

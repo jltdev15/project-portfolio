@@ -3,8 +3,10 @@ import jwt from 'jsonwebtoken'
 const JWT_SECRET = process.env.JWT_SECRET || 'your-secret-key'
 
 export default defineEventHandler(async (event) => {
-  // Skip auth for login and register endpoints
-  if (event.path.startsWith('/api/auth/')) {
+  // Skip auth for login, register, and public endpoints
+  if (event.path.startsWith('/api/auth/') || 
+      event.path.startsWith('/api/projects') && event.method === 'GET' ||
+      !event.path.startsWith('/api/admin/')) {
     return
   }
 
