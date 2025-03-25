@@ -5,6 +5,13 @@ export default defineNuxtConfig({
   compatibilityDate: '2024-11-01',
   devtools: { enabled: true },
   ssr: true, // Explicitly enable SSR
+  nitro: {
+    routeRules: {
+      '/api/**': {
+        cors: true
+      }
+    }
+  },
   app: {
     head: {
       htmlAttrs: {
@@ -30,6 +37,7 @@ export default defineNuxtConfig({
   css: ['~/assets/css/main.css'],
   modules: ['@nuxt/image', '@nuxtjs/sitemap'],
   runtimeConfig: {
+    mongodbUri: process.env.MONGODB_URI || 'mongodb://localhost:27017/portfolio',
     public: {
       siteUrl: 'https://johnlerryt.vercel.app'
     }

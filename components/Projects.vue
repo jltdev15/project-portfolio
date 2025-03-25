@@ -27,7 +27,18 @@
           <p class="text-xl text-gray-600 mt-6 max-w-2xl mx-auto">Explore my portfolio of innovative projects showcasing my expertise in web and mobile development</p>
         </div>
 
-        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+        <!-- Loading State -->
+        <div v-if="loading" class="flex justify-center items-center min-h-[400px]">
+          <div class="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-blue-600"></div>
+        </div>
+
+        <!-- Error State -->
+        <div v-else-if="error" class="text-center text-red-600 py-8">
+          {{ error }}
+        </div>
+
+        <!-- Projects Grid -->
+        <div v-else class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
           <div 
             v-for="(project, index) in projects" 
             :key="index"
@@ -84,42 +95,43 @@
 <script setup>
 import { ArrowTopRightOnSquareIcon } from '@heroicons/vue/24/outline'
 import { useScrollAnimation } from '../composables/useScrollAnimation'
+import { ref, onMounted } from 'vue'
 
 const { element: projectsRef, isVisible } = useScrollAnimation({
   threshold: 0.2,
   rootMargin: '0px'
 })
 
-const projects = [
-  {
-    title: 'OJT Tracking System DVHSU',
-    description: 'An OJT Tracking System is a digital platform designed to monitor and manage On-the-Job Training (OJT) programs. It helps supervisors, trainers, and trainees track progress, attendance, tasks, and performance evaluations.',
-    image: 'https://img.freepik.com/premium-photo/gps-tracker-map-navigation-pins-map-navigation-technology-mapping-capital-road_357568-2529.jpg',
-    technologies: ['Vue.js', 'Node.js', 'MongoDB', 'Socket.io','Tailwind css'],
-    linkUrl: 'https://github.com/jltdev15/ojt-tracking-geo-vue'
-  },
-  {
-    title: 'Online Document Repository System',
-    description: 'An Online Document Repository System is a web-based platform for storing, organizing, and managing digital documents. It allows users to upload, categorize, search, and securely access files from any location.',
-    image: 'https://cdn.prod.website-files.com/618165faab94901955064900/618165faab9490c71e064b45_ACP-Blog-document-management-101-compressed.jpg',
-    technologies: ['Vue.js', 'Node.js', 'MongoDB', 'Socket.io','Tailwind css'],
-    linkUrl: 'https://github.com/jltdev15/Online-Document-Request-System'
-  },
-  {
-    title: 'Todo',
-    description: 'A simple and efficient to-do app built with Vue 3, Capacitor, and Firebase for Android. It allows users to create, manage, and complete tasks with real-time sync, notifications',
-    image: 'https://play-lh.googleusercontent.com/PH-2iORSfQs-iizoHzePXBaJCXml443pgoC14-lZESLFIp78A4SvxLKUVv1FyIQFtC8',
-    technologies: ['Vue.js', 'Capacitor', 'Ionic', 'Firebase','Tailwind css','Android'],
-    linkUrl: 'https://github.com/yourusername/todo-app'
-  },
-  {
-    title: 'Web Based Queue System + Android App for Kiosk',
-    description: 'A web-based queue management system with an integrated Android kiosk app. Users can join queues remotely, track their status in real-time, and receive notifications. The kiosk app, installed on an ESC/POS thermal printer tablet, enables on-site ticket printing and queue management.',
-    image: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSVjL16oNPpccAGrGMXi4wGVFFvoqFJX8DVug&s',
-    technologies: ['Vue.js', 'Capacitor', 'Google Firebase','Tailwind css','Android', 'Ionic'],
-    linkUrl: 'https://github.com/jltdev15/todoApp'
+const projects = ref([])
+const loading = ref(true)
+const error = ref(null)
+
+const fetchProjects = async () => {
+  try {
+    loading.value = true
+    const response = await fetch('/api/projects')
+    if (!response.ok) {
+      throw new Error('Failed to fetch projects')
+    }
+    const data = await response.json()
+    projects.value = data.map(project => ({
+      title: project.title,
+      description: project.description,
+      image: project.image,
+      technologies: project.technologies,
+      linkUrl: project.linkUrl
+    }))
+  } catch (err) {
+    error.value = err.message
+    console.error('Error fetching projects:', err)
+  } finally {
+    loading.value = false
   }
-]
+}
+
+onMounted(() => {
+  fetchProjects()
+})
 </script>
 
 <style scoped>
