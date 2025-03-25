@@ -3,6 +3,7 @@ import { ref, onMounted, onUnmounted } from 'vue'
 export function useScrollAnimation(options = {}) {
   const element = ref(null)
   const isVisible = ref(false)
+  let observer = null
 
   const defaultOptions = {
     threshold: 0.2,
@@ -10,25 +11,28 @@ export function useScrollAnimation(options = {}) {
     ...options
   }
 
-  onMounted(() => {
-    const observer = new IntersectionObserver((entries) => {
-      entries.forEach((entry) => {
-        if (entry.isIntersecting) {
-          isVisible.value = true
+  const handleIntersection = (entries) => {
+    entries.forEach((entry) => {
+      if (entry.isIntersecting) {
+        isVisible.value = true
+        if (observer) {
           observer.unobserve(entry.target)
         }
-      })
-    }, defaultOptions)
+      }
+    })
+  }
 
+  onMounted(() => {
+    observer = new IntersectionObserver(handleIntersection, defaultOptions)
     if (element.value) {
       observer.observe(element.value)
     }
+  })
 
-    onUnmounted(() => {
-      if (element.value) {
-        observer.unobserve(element.value)
-      }
-    })
+  onUnmounted(() => {
+    if (observer && element.value) {
+      observer.unobserve(element.value)
+    }
   })
 
   return {

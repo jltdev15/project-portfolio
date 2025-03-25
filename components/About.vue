@@ -106,7 +106,6 @@ const stats = [
   { value: '5+', label: 'Years Experience' },
   { value: '50+', label: 'Projects Completed' },
   { value: '30+', label: 'Happy Clients' },
-  { value: '10+', label: 'Countries Served' }
 ]
 
 const skills = [

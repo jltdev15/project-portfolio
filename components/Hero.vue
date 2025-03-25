@@ -96,9 +96,6 @@
             aria-hidden="true" />
         </a>
       </div>
-
-      <!-- Survey Modal -->
-      <SurveyModal :is-open="isSurveyModalOpen" @close="closeSurveyModal" @submit="handleSurveySubmit" />
     </div>
   </section>
 </template>
@@ -106,8 +103,6 @@
 <script setup>
 import { ArrowRightIcon, EnvelopeIcon } from '@heroicons/vue/24/outline'
 import { ref } from 'vue'
-
-
 
 const scrollToSection = (sectionId) => {
   const element = document.querySelector(sectionId)
