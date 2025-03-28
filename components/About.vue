@@ -39,7 +39,7 @@
             <div class="absolute inset-0 bg-gradient-to-r from-blue-600 to-purple-600 rounded-2xl transform rotate-3 group-hover:rotate-6 transition-transform duration-300"></div>
             <div class="relative bg-white rounded-2xl p-4 shadow-xl">
               <img 
-                src="/images/profile.jpg" 
+                src="/images/dp-2.png" 
                 alt="Profile picture" 
                 class="w-full h-auto rounded-xl object-cover"
                 loading="lazy"
