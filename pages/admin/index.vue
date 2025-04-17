@@ -271,6 +271,7 @@
 <script setup>
 import { ref, computed, onMounted } from 'vue'
 import { useRouter } from 'vue-router'
+import { useRuntimeConfig } from '#app'
 
 const router = useRouter()
 
@@ -382,7 +383,7 @@ const handleLogout = async () => {
     localStorage.removeItem('isAuthenticated')
     
     // Redirect to login page
-    router.push('/admin/login')
+    router.push('/admin/auth')
   } catch (error) {
     console.error('Error logging out:', error)
   }
@@ -390,12 +391,10 @@ const handleLogout = async () => {
 
 onMounted(() => {
   // Check authentication
-  if (process.client) {
-    const isAuthenticated = localStorage.getItem('isAuthenticated') === 'true'
-    if (!isAuthenticated) {
-      router.push('/admin/login')
-      return
-    }
+  const isAuthenticated = localStorage.getItem('isAuthenticated') === 'true'
+  if (!isAuthenticated) {
+    router.push('/admin/auth')
+    return
   }
   
   fetchProjects()

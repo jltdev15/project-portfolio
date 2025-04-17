@@ -5,6 +5,7 @@ export default defineNuxtConfig({
   compatibilityDate: '2024-11-01',
   devtools: { enabled: true },
   ssr: true, // Explicitly enable SSR
+  pages: true, // Explicitly enable pages feature
   nitro: {
     routeRules: {
       '/api/**': {
@@ -13,6 +14,8 @@ export default defineNuxtConfig({
     }
   },
   app: {
+    pageTransition: { name: 'page', mode: 'out-in' },
+    layoutTransition: { name: 'layout', mode: 'out-in' },
     head: {
       htmlAttrs: {
         lang: 'en'
@@ -39,7 +42,7 @@ export default defineNuxtConfig({
   runtimeConfig: {
     mongodbUri: process.env.MONGODB_URI || 'mongodb://localhost:27017/portfolio',
     public: {
-      siteUrl: 'https://johnlerryt.vercel.app'
+      siteUrl: 'https://www.johnlerryt.com/'
     }
   },
   sitemap: {

@@ -13,7 +13,7 @@
       </h2>
       <p class="mt-2 text-center text-sm text-gray-600">
         Already have an account?
-        <NuxtLink to="/admin/login" class="font-medium text-blue-600 hover:text-blue-500 transition-colors duration-200">
+        <NuxtLink to="/admin/auth" class="font-medium text-blue-600 hover:text-blue-500 transition-colors duration-200">
           Sign in
         </NuxtLink>
       </p>
@@ -227,7 +227,7 @@ const handleRegister = async () => {
     }
 
     // Registration successful, redirect to login
-    router.push('/admin/login')
+    router.push('/admin/auth')
   } catch (err) {
     error.value = err.message || 'Registration failed'
     console.error('Registration error:', err)

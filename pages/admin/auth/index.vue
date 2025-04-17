@@ -28,7 +28,7 @@
       </p>
       <p class="mt-1 text-center text-sm text-blue-100 animate-fade-in-delay-1">
         Don't have an account?
-        <NuxtLink to="/admin/register" class="font-medium text-blue-400 hover:text-blue-300 transition-colors duration-200">
+        <NuxtLink to="/admin/auth/register" class="font-medium text-blue-400 hover:text-blue-300 transition-colors duration-200">
           Create one
         </NuxtLink>
       </p>
@@ -127,7 +127,8 @@ const error = ref('')
 
 // Check if user is already authenticated
 onMounted(() => {
-  if (process.client) {
+  const runtimeConfig = useRuntimeConfig()
+  if (runtimeConfig.app.client) {
     const isAuthenticated = localStorage.getItem('isAuthenticated') === 'true'
     const token = useCookie('auth_token').value
     
