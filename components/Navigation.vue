@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div v-show="mounted">
     <!-- Floating Menu Button -->
     <button
       v-show="!isMenuOpen"
@@ -64,7 +64,7 @@
 </template>
 
 <script setup>
-import { onUnmounted } from 'vue'
+import { onMounted, onUnmounted, nextTick, ref } from 'vue'
 import { 
   Bars3Icon, 
   XMarkIcon,
@@ -76,6 +76,12 @@ import {
 } from '@heroicons/vue/24/outline'
 import { isMenuOpen, toggleMenu } from '../stores/navigation'
 
+const mounted = ref(false)
+
+onMounted(() => {
+  mounted.value = true
+})
+
 const links = [
   { href: '#home', text: 'Home', icon: HomeIcon },
   { href: '#about', text: 'About', icon: UserIcon },
@@ -84,7 +90,8 @@ const links = [
   { href: '#contact', text: 'Contact', icon: EnvelopeIcon }
 ]
 
-const handleMobileClick = (href) => {
+const handleMobileClick = async (href) => {
+  await nextTick()
   const element = document.querySelector(href)
   if (element) {
     const navHeight = href === '#home' ? 0 : 80
