@@ -73,7 +73,21 @@
               </div>
               <div class="p-8">
                 <h3 class="text-2xl font-semibold mb-4 text-gray-900 group-hover:text-blue-600 transition-colors duration-300">{{ project.title }}</h3>
-                <p class="text-gray-600 mb-6 leading-relaxed text-justify">{{ project.description }}</p>
+                <p class="text-gray-600 mb-6 leading-relaxed text-justify">
+                  <span v-if="project.description.length > 150">
+                    {{ project.description.substring(0, 150) }}...
+                  </span>
+                  <span v-else>
+                    {{ project.description }}
+                  </span>
+                  <button 
+                    v-if="project.description.length > 150"
+                    @click="openModal(project)"
+                    class="text-blue-600 hover:text-blue-800 font-medium ml-1 transition-colors duration-300 focus:outline-none focus:underline"
+                  >
+                    See more
+                  </button>
+                </p>
                 <div class="flex flex-wrap gap-2">
                   <span 
                     v-for="(tech, techIndex) in project.technologies" 
@@ -89,13 +103,74 @@
         </div>
       </div>
     </div>
+
+    <!-- Project Description Modal -->
+    <Teleport to="body">
+      <Transition name="modal">
+        <div 
+          v-if="selectedProject"
+          @click.self="closeModal"
+          class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/50 backdrop-blur-sm"
+        >
+          <div class="bg-white rounded-2xl max-w-2xl w-full max-h-[90vh] overflow-hidden shadow-2xl transform transition-all">
+            <!-- Modal Header -->
+            <div class="relative bg-gradient-to-r from-blue-600 to-purple-600 p-6">
+              <h3 class="text-2xl font-bold text-white pr-8">{{ selectedProject.title }}</h3>
+              <button
+                @click="closeModal"
+                class="absolute top-4 right-4 text-white hover:text-gray-200 transition-colors duration-300 focus:outline-none focus:ring-2 focus:ring-white rounded-full p-1"
+                aria-label="Close modal"
+              >
+                <XMarkIcon class="w-6 h-6" />
+              </button>
+            </div>
+
+            <!-- Modal Body -->
+            <div class="p-6 overflow-y-auto max-h-[calc(90vh-140px)]">
+              <div class="mb-6">
+                <img 
+                  :src="selectedProject.image" 
+                  :alt="selectedProject.title"
+                  class="w-full h-64 object-cover rounded-lg mb-6"
+                >
+              </div>
+              <p class="text-gray-700 leading-relaxed text-justify mb-6">
+                {{ selectedProject.description }}
+              </p>
+              <div class="flex flex-wrap gap-2 mb-6">
+                <span 
+                  v-for="(tech, techIndex) in selectedProject.technologies" 
+                  :key="techIndex"
+                  class="px-4 py-1.5 bg-blue-50 text-blue-600 rounded-full text-sm font-medium"
+                >
+                  {{ tech }}
+                </span>
+              </div>
+            </div>
+
+            <!-- Modal Footer -->
+            <div class="px-6 py-4 bg-gray-50 border-t border-gray-200 flex justify-end">
+              <a 
+                :href="selectedProject.linkUrl" 
+                target="_blank" 
+                rel="noopener noreferrer"
+                class="px-6 py-2 bg-gradient-to-r from-blue-600 to-purple-600 text-white rounded-full font-semibold hover:opacity-90 transition-opacity duration-300 flex items-center space-x-2"
+              >
+                <span>View Project</span>
+                <ArrowTopRightOnSquareIcon class="w-5 h-5" />
+              </a>
+            </div>
+          </div>
+        </div>
+      </Transition>
+    </Teleport>
   </section>
 </template>
 
 <script setup>
-import { ArrowTopRightOnSquareIcon } from '@heroicons/vue/24/outline'
+import { ArrowTopRightOnSquareIcon, XMarkIcon } from '@heroicons/vue/24/outline'
 import { useScrollAnimation } from '../composables/useScrollAnimation'
-import { ref, onMounted } from 'vue'
+import { ref, onMounted, onUnmounted } from 'vue'
 
 const { element: projectsRef, isVisible } = useScrollAnimation({
   threshold: 0.2,
@@ -105,6 +180,33 @@ const { element: projectsRef, isVisible } = useScrollAnimation({
 const projects = ref([])
 const loading = ref(true)
 const error = ref(null)
+const selectedProject = ref(null)
+
+const openModal = (project) => {
+  selectedProject.value = project
+  document.body.style.overflow = 'hidden'
+}
+
+const closeModal = () => {
+  selectedProject.value = null
+  document.body.style.overflow = ''
+}
+
+// Handle ESC key press
+const handleEscape = (e) => {
+  if (e.key === 'Escape' && selectedProject.value) {
+    closeModal()
+  }
+}
+
+onMounted(() => {
+  window.addEventListener('keydown', handleEscape)
+})
+
+onUnmounted(() => {
+  window.removeEventListener('keydown', handleEscape)
+  document.body.style.overflow = ''
+})
 
 const fetchProjects = async () => {
   try {
@@ -160,5 +262,27 @@ onMounted(() => {
   100% {
     transform: translate(0, 0) rotate(360deg);
   }
+}
+
+/* Modal transitions */
+.modal-enter-active,
+.modal-leave-active {
+  transition: opacity 0.3s ease;
+}
+
+.modal-enter-active > div,
+.modal-leave-active > div {
+  transition: transform 0.3s ease, opacity 0.3s ease;
+}
+
+.modal-enter-from,
+.modal-leave-to {
+  opacity: 0;
+}
+
+.modal-enter-from > div,
+.modal-leave-to > div {
+  transform: scale(0.9) translateY(-20px);
+  opacity: 0;
 }
 </style> 
