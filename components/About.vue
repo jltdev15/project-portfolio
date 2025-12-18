@@ -1,7 +1,7 @@
 <template>
   <section 
     id="about" 
-    class="py-24 bg-gradient-to-b from-white to-gray-50 relative overflow-hidden"
+    class="py-24 bg-black relative overflow-hidden"
     aria-labelledby="about-title"
   >
     <!-- Background Pattern -->
@@ -11,8 +11,8 @@
 
     <!-- Animated Accent Elements -->
     <div class="absolute inset-0 overflow-hidden pointer-events-none">
-      <div class="absolute w-64 h-64 bg-gradient-to-br from-blue-500/10 to-purple-500/10 rounded-full blur-3xl -top-32 -right-32 animate-float-1"></div>
-      <div class="absolute w-64 h-64 bg-gradient-to-br from-purple-500/10 to-blue-500/10 rounded-full blur-3xl -bottom-32 -left-32 animate-float-2"></div>
+      <div class="absolute w-64 h-64 bg-[#1D9BF0]/5 rounded-full blur-3xl -top-32 -right-32 animate-float-1"></div>
+      <div class="absolute w-64 h-64 bg-[#1D9BF0]/5 rounded-full blur-3xl -bottom-32 -left-32 animate-float-2"></div>
     </div>
 
     <div class="container mx-auto px-4 relative">
@@ -26,18 +26,18 @@
         <div class="text-center mb-16">
           <h2 
             id="about-title"
-            class="text-5xl font-bold mb-6 bg-clip-text text-transparent bg-gradient-to-r from-blue-600 to-purple-600"
+            class="text-5xl font-bold mb-6 text-[#F7F9F9]"
           >
             About Me
           </h2>
-          <div class="w-24 h-1 bg-gradient-to-r from-blue-600 to-purple-600 mx-auto rounded-full"></div>
+          <div class="w-24 h-1 bg-[#1D9BF0] mx-auto rounded-full"></div>
         </div>
 
         <div class="grid md:grid-cols-2 gap-12 items-center max-w-6xl mx-auto">
           <!-- Profile Image -->
           <div class="relative group">
-            <div class="absolute inset-0 bg-gradient-to-r from-blue-600 to-purple-600 rounded-2xl transform rotate-3 group-hover:rotate-6 transition-transform duration-300"></div>
-            <div class="relative bg-white rounded-2xl p-4 shadow-xl">
+            <div class="absolute inset-0 bg-[#1D9BF0] rounded-2xl transform rotate-3 group-hover:rotate-6 transition-transform duration-300 opacity-20"></div>
+            <div class="relative bg-[#16181C] border border-[#2F3336] rounded-2xl p-4 shadow-xl">
               <img 
                 src="/images/dp-2.png" 
                 alt="Profile picture" 
@@ -50,7 +50,7 @@
 
           <!-- Content -->
           <div class="space-y-6">
-            <p class="text-xl text-gray-600 leading-relaxed">
+            <p class="text-xl text-[#71767A] leading-relaxed">
               I am a seasoned Full Stack Developer with over 5 years of experience in creating
               innovative web solutions. My expertise spans across frontend and backend technologies,
               allowing me to build comprehensive applications that deliver exceptional user experiences.
@@ -61,21 +61,21 @@
               <div 
                 v-for="(stat, index) in stats" 
                 :key="index"
-                class="bg-white p-6 rounded-xl shadow-sm hover:shadow-md transition-shadow duration-300"
+                class="bg-[#16181C] border border-[#2F3336] p-6 rounded-xl hover:bg-[#181919] transition-colors duration-300"
               >
-                <div class="text-3xl font-bold text-blue-600 mb-2">{{ stat.value }}</div>
-                <div class="text-gray-600">{{ stat.label }}</div>
+                <div class="text-3xl font-bold text-[#1D9BF0] mb-2">{{ stat.value }}</div>
+                <div class="text-[#71767A]">{{ stat.label }}</div>
               </div>
             </div>
 
             <!-- Skills -->
             <div class="mt-8">
-              <h3 class="text-2xl font-semibold text-gray-800 mb-4">Core Skills</h3>
+              <h3 class="text-2xl font-semibold text-[#F7F9F9] mb-4">Core Skills</h3>
               <div class="flex flex-wrap gap-2">
                 <span 
                   v-for="skill in skills" 
                   :key="skill"`
-                  class="px-4 py-2 bg-blue-50 text-blue-600 roundexd-full text-sm font-medium hover:bg-blue-100 transition-colors duration-200"
+                  class="px-4 py-2 bg-[#2F3336] text-[#71767A] rounded-full text-sm font-medium hover:bg-[#181919] transition-colors duration-200"
                 >
                   {{ skill }}
                 </span>

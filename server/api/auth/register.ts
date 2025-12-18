@@ -1,4 +1,4 @@
-import { defineEventHandler, readBody } from 'h3'
+import { defineEventHandler, readBody, createError } from 'h3'
 import { connectDB } from '../../utils/db'
 import { User } from '../../models/User'
 

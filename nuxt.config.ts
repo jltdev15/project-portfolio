@@ -11,6 +11,9 @@ export default defineNuxtConfig({
       '/api/**': {
         cors: true
       }
+    },
+    prerender: {
+      crawlLinks: false
     }
   },
   app: {
@@ -38,11 +41,17 @@ export default defineNuxtConfig({
     }
   },
   css: ['~/assets/css/main.css'],
-  modules: ['@nuxt/image', '@nuxtjs/sitemap'],
+  modules: ['@nuxt/image', '@nuxtjs/sitemap', '@nuxt/icon'],
   runtimeConfig: {
     mongodbUri: process.env.MONGODB_URI || 'mongodb://localhost:27017/portfolio',
     public: {
-      siteUrl: 'https://www.johnlerryt.com/'
+      siteUrl: 'https://www.johnlerryt.com/',
+      firebaseApiKey: process.env.FIREBASE_API_KEY || '',
+      firebaseAuthDomain: process.env.FIREBASE_AUTH_DOMAIN || '',
+      firebaseProjectId: process.env.FIREBASE_PROJECT_ID || '',
+      firebaseStorageBucket: process.env.FIREBASE_STORAGE_BUCKET || '',
+      firebaseMessagingSenderId: process.env.FIREBASE_MESSAGING_SENDER_ID || '',
+      firebaseAppId: process.env.FIREBASE_APP_ID || ''
     }
   },
   sitemap: {

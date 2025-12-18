@@ -4,19 +4,15 @@
       <div class="flex justify-center">
         <div class="w-20 h-20 bg-[#1D9BF0]/20 border-2 border-[#1D9BF0] rounded-full flex items-center justify-center">
           <svg class="w-10 h-10 text-[#1D9BF0]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M18.364 5.636l-3.536 3.536m0 5.656l3.536 3.536M9.172 9.172L5.636 5.636m3.536 9.192l-3.536 3.536M21 12a9 9 0 11-18 0 9 9 0 0118 0zm-5 0a4 4 0 11-8 0 4 4 0 018 0z" />
           </svg>
         </div>
       </div>
       <h2 class="mt-6 text-center text-3xl font-extrabold text-[#F7F9F9]">
-        Welcome Back
+        Support Portal
       </h2>
       <p class="mt-2 text-center text-sm text-[#71767A]">
-        Sign in to your account
-      </p>
-      <p class="mt-1 text-center text-sm text-[#71767A]">
-        <span v-if="isClientLogin">Client Support Portal</span>
-
+        Sign in to access your project support tickets
       </p>
     </div>
 
@@ -103,17 +99,20 @@
 import { ref, onMounted } from 'vue'
 import { useRouter } from 'vue-router'
 
+definePageMeta({
+  layout: false,
+  middleware: 'client-auth'
+})
+
 const router = useRouter()
-const route = useRoute()
 const form = ref({
   username: '',
   password: ''
 })
 const loading = ref(false)
 const error = ref('')
-const isClientLogin = ref(false)
 
-// Check if this is a client login (from Help and Support button)
+// Check if user is already authenticated
 onMounted(() => {
   const runtimeConfig = useRuntimeConfig()
   if (runtimeConfig.app.client) {
@@ -129,20 +128,16 @@ onMounted(() => {
           if (user.role === 'user') {
             router.push('/support/dashboard')
           } else {
+            // Admin users should not access support auth
             router.push('/admin')
           }
         } catch (err) {
-          router.push('/admin')
+          router.push('/admin/auth')
         }
       } else {
-        router.push('/admin')
+        router.push('/admin/auth')
       }
     }
-  }
-  
-  // Check if redirected from Help and Support
-  if (route.query.client === 'true' || route.query.support === 'true') {
-    isClientLogin.value = true
   }
 })
 
@@ -165,18 +160,17 @@ const handleLogin = async () => {
       throw new Error(data.message || 'Login failed')
     }
 
+    // Check if user is a client (role: 'user')
+    if (data.user.role !== 'user') {
+      throw new Error('This portal is for clients only. Please use the admin login.')
+    }
+
     // Store user data and authentication state in localStorage
     localStorage.setItem('user', JSON.stringify(data.user))
     localStorage.setItem('isAuthenticated', 'true')
     
-    // Redirect based on user role
-    if (data.user.role === 'user') {
-      // Client users go to support dashboard
-      router.push('/support/dashboard')
-    } else {
-      // Admin users go to dashboard
-      router.push('/admin')
-    }
+    // Redirect client users to support dashboard
+    router.push('/support/dashboard')
   } catch (err) {
     error.value = err.message || 'Login failed'
     console.error('Login error:', err)
@@ -185,3 +179,4 @@ const handleLogin = async () => {
   }
 }
 </script>
+

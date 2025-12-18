@@ -1,5 +1,5 @@
 <template>
-  <footer class="bg-gray-900 text-white py-16 relative overflow-hidden">
+  <footer class="bg-black text-[#F7F9F9] py-16 relative overflow-hidden">
     <!-- Background Pattern -->
     <div class="absolute inset-0 overflow-hidden pointer-events-none opacity-5">
       <div class="absolute inset-0" style="background-image: radial-gradient(circle at 1px 1px, rgb(255 255 255) 1px, transparent 0); background-size: 24px 24px;"></div>
@@ -7,51 +7,51 @@
 
     <!-- Animated Accent Elements -->
     <div class="absolute inset-0 overflow-hidden pointer-events-none">
-      <div class="absolute w-64 h-64 bg-blue-500/5 rounded-full -top-32 -right-32 animate-float-1"></div>
-      <div class="absolute w-64 h-64 bg-purple-500/5 rounded-full -bottom-32 -left-32 animate-float-2"></div>
+      <div class="absolute w-64 h-64 bg-[#1D9BF0]/5 rounded-full -top-32 -right-32 animate-float-1"></div>
+      <div class="absolute w-64 h-64 bg-[#1D9BF0]/5 rounded-full -bottom-32 -left-32 animate-float-2"></div>
     </div>
 
     <div class="container mx-auto px-4 relative">
       <div class="grid grid-cols-1 md:grid-cols-3 gap-12">
         <!-- Contact Info -->
         <div class="space-y-6">
-          <h3 class="text-2xl font-bold text-blue-400">
+          <h3 class="text-2xl font-bold text-[#1D9BF0]">
             Contact Info
           </h3>
           <div class="space-y-4">
             <div class="flex items-center space-x-3 group">
-              <div class="w-10 h-10 bg-blue-500/5 rounded-lg flex items-center justify-center group-hover:scale-110 transition-transform duration-300">
-                <EnvelopeIcon class="w-5 h-5 text-blue-400" />
+              <div class="w-10 h-10 bg-[#1D9BF0]/10 rounded-lg flex items-center justify-center group-hover:scale-110 transition-transform duration-300">
+                <Icon name="lucide:mail" class="w-5 h-5 text-[#1D9BF0]" />
               </div>
-              <p class="text-gray-400 group-hover:text-white transition-colors duration-300">johnlerrytaruc@gmail.com</p>
+              <p class="text-[#71767A] group-hover:text-[#F7F9F9] transition-colors duration-300">johnlerrytaruc@gmail.com</p>
             </div>
             <div class="flex items-center space-x-3 group">
-              <div class="w-10 h-10 bg-blue-500/5 rounded-lg flex items-center justify-center group-hover:scale-110 transition-transform duration-300">
-                <PhoneIcon class="w-5 h-5 text-blue-400" />
+              <div class="w-10 h-10 bg-[#1D9BF0]/10 rounded-lg flex items-center justify-center group-hover:scale-110 transition-transform duration-300">
+                <Icon name="lucide:phone" class="w-5 h-5 text-[#1D9BF0]" />
               </div>
-              <p class="text-gray-400 group-hover:text-white transition-colors duration-300">+63 977 628 1665</p>
+              <p class="text-[#71767A] group-hover:text-[#F7F9F9] transition-colors duration-300">+63 991 926 0934</p>
             </div>
             <div class="flex items-center space-x-3 group">
-              <div class="w-10 h-10 bg-blue-500/5 rounded-lg flex items-center justify-center group-hover:scale-110 transition-transform duration-300">
-                <MapPinIcon class="w-5 h-5 text-blue-400" />
+              <div class="w-10 h-10 bg-[#1D9BF0]/10 rounded-lg flex items-center justify-center group-hover:scale-110 transition-transform duration-300">
+                <Icon name="lucide:map-pin" class="w-5 h-5 text-[#1D9BF0]" />
               </div>
-              <p class="text-gray-400 group-hover:text-white transition-colors duration-300">Manila , Philippines</p>
+              <p class="text-[#71767A] group-hover:text-[#F7F9F9] transition-colors duration-300">Manila , Philippines</p>
             </div>
           </div>
         </div>
 
         <!-- Quick Links -->
         <div class="space-y-6">
-          <h3 class="text-2xl font-bold text-blue-400">
+          <h3 class="text-2xl font-bold text-[#1D9BF0]">
             Quick Links
           </h3>
           <ul class="space-y-4">
             <li v-for="(link, index) in quickLinks" :key="index">
               <a 
                 :href="link.href" 
-                class="flex items-center space-x-2 text-gray-400 hover:text-white transition-all duration-300 group"
+                class="flex items-center space-x-2 text-[#71767A] hover:text-[#F7F9F9] transition-all duration-300 group"
               >
-                <ChevronRightIcon class="w-4 h-4 opacity-0 group-hover:opacity-100 group-hover:translate-x-1 transition-all duration-300" />
+                <Icon name="lucide:chevron-right" class="w-4 h-4 opacity-0 group-hover:opacity-100 group-hover:translate-x-1 transition-all duration-300" />
                 <span>{{ link.text }}</span>
               </a>
             </li>
@@ -60,7 +60,7 @@
 
         <!-- Social Links -->
         <div class="space-y-6">
-          <h3 class="text-2xl font-bold text-blue-400">
+          <h3 class="text-2xl font-bold text-[#1D9BF0]">
             Follow Me
           </h3>
           <div class="flex space-x-4">
@@ -68,13 +68,13 @@
               v-for="(social, index) in socialLinks" 
               :key="index"
               :href="social.href" 
-              class="w-12 h-12 bg-blue-500/5 rounded-lg flex items-center justify-center hover:scale-110 transition-all duration-300 group"
+              class="w-12 h-12 bg-[#1D9BF0]/10 border border-[#2F3336] rounded-lg flex items-center justify-center hover:bg-[#1D9BF0]/20 hover:scale-110 transition-all duration-300 group"
               target="_blank"
               rel="noopener noreferrer"
               :aria-label="social.label"
             >
               <svg 
-                class="w-6 h-6 text-gray-400 group-hover:text-blue-400 transition-colors duration-300" 
+                class="w-6 h-6 text-[#71767A] group-hover:text-[#1D9BF0] transition-colors duration-300" 
                 fill="currentColor" 
                 viewBox="0 0 24 24"
                 v-html="social.svg"
@@ -86,8 +86,8 @@
       </div>
 
       <!-- Copyright -->
-      <div class="border-t border-gray-800 mt-12 pt-8 text-center">
-        <p class="text-gray-400">
+      <div class="border-t border-[#2F3336] mt-12 pt-8 text-center">
+        <p class="text-[#71767A]">
           &copy; {{ new Date().getFullYear() }} John Lerry T. All rights reserved.
         </p>
       </div>
@@ -96,12 +96,7 @@
 </template>
 
 <script setup>
-import { 
-  EnvelopeIcon, 
-  PhoneIcon, 
-  MapPinIcon,
-  ChevronRightIcon
-} from '@heroicons/vue/24/outline'
+// Icons are now using @nuxt/icon with Lucide icons
 
 const quickLinks = [
   { text: 'About', href: '#about' },

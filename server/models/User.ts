@@ -24,7 +24,44 @@ const userSchema = new mongoose.Schema({
     enum: ['admin', 'user'],
     default: 'user'
   },
+  avatar: {
+    type: String,
+    default: null
+  },
+  firstName: {
+    type: String,
+    trim: true
+  },
+  lastName: {
+    type: String,
+    trim: true
+  },
+  bio: {
+    type: String,
+    trim: true
+  },
+  phone: {
+    type: String,
+    trim: true
+  },
+  location: {
+    type: String,
+    trim: true
+  },
+  projectId: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'TicketProject',
+    default: null
+  },
+  credentialsGenerated: {
+    type: Boolean,
+    default: false
+  },
   createdAt: {
+    type: Date,
+    default: Date.now
+  },
+  updatedAt: {
     type: Date,
     default: Date.now
   }
@@ -32,11 +69,18 @@ const userSchema = new mongoose.Schema({
 
 // Hash password before saving
 userSchema.pre('save', async function(next) {
-  if (!this.isModified('password')) return next()
+  if (!this.isModified('password')) {
+    // Update updatedAt if not modifying password
+    if (this.isModified() && !this.isNew) {
+      this.updatedAt = new Date()
+    }
+    return next()
+  }
   
   try {
     const salt = await bcrypt.genSalt(10)
     this.password = await bcrypt.hash(this.password, salt)
+    this.updatedAt = new Date()
     next()
   } catch (error) {
     next(error as Error)

@@ -1,375 +1,650 @@
 <template>
-  <div class="min-h-screen bg-gradient-to-br from-blue-900 via-purple-900 to-indigo-900 flex flex-col py-12 px-4 sm:px-6 lg:px-8 relative overflow-hidden">
-    <!-- Animated background overlay -->
-    <div class="absolute inset-0 bg-black/40"></div>
-    <div class="absolute inset-0 bg-[url('/images/grid.svg')] opacity-5"></div>
+  <div class="min-h-screen bg-black text-[#F7F9F9]">
+    <!-- Header Bar -->
+    <div class="sticky top-0 z-50 bg-black border-b border-[#2F3336]">
+      <div class="container mx-auto px-4 py-3 flex items-center justify-between">
+        <h1 class="text-xl font-bold">Admin Dashboard</h1>
+        <div class="relative" ref="dropdownRef">
+          <!-- Avatar Button -->
+          <button
+            @click="toggleDropdown"
+            class="flex items-center space-x-3 px-3 py-2 rounded-full hover:bg-[#181919] transition-colors duration-150"
+            aria-label="User menu"
+          >
+            <div class="w-10 h-10 rounded-full bg-[#1D9BF0]/20 border-2 border-[#1D9BF0] flex items-center justify-center overflow-hidden">
+              <NuxtImg 
+                v-if="userInfo?.avatar" 
+                :src="userInfo.avatar" 
+                alt="Avatar"
+                class="w-full h-full object-cover"
+                preset="avatar"
+              />
+              <Icon 
+                v-else
+                name="lucide:user" 
+                class="w-6 h-6 text-[#1D9BF0]"
+              />
+            </div>
+            <div class="hidden md:block text-left">
+              <p class="text-sm font-medium text-[#F7F9F9]">{{ userInfo?.username || 'Admin' }}</p>
+              <p class="text-xs text-[#71767A]">Administrator</p>
+            </div>
+            <Icon 
+              name="lucide:chevron-down" 
+              class="w-4 h-4 text-[#71767A] transition-transform duration-200"
+              :class="{ 'rotate-180': isDropdownOpen }"
+            />
+          </button>
 
-    <!-- Animated particles -->
-    <div class="absolute inset-0 overflow-hidden">
-      <div class="absolute w-3 h-3 bg-white/20 rounded-full animate-float-1" style="top: 20%; left: 20%"></div>
-      <div class="absolute w-3 h-3 bg-white/20 rounded-full animate-float-2" style="top: 40%; right: 20%"></div>
-      <div class="absolute w-3 h-3 bg-white/20 rounded-full animate-float-3" style="bottom: 30%; left: 30%"></div>
-      <div class="absolute w-3 h-3 bg-white/20 rounded-full animate-float-4" style="bottom: 40%; right: 30%"></div>
+          <!-- Dropdown Menu -->
+          <Transition name="dropdown">
+            <div
+              v-if="isDropdownOpen"
+              class="absolute right-0 mt-2 w-56 bg-[#16181C] border border-[#2F3336] rounded-lg shadow-xl overflow-hidden"
+            >
+              <div class="px-4 py-3 border-b border-[#2F3336]">
+                <p class="text-sm font-medium text-[#F7F9F9]">{{ userInfo?.username || 'Admin' }}</p>
+                <p class="text-xs text-[#71767A] mt-0.5">{{ userInfo?.email || 'admin@example.com' }}</p>
+              </div>
+              <div class="py-1">
+                <button
+                  @click="openProfileModal"
+                  class="w-full px-4 py-2 text-left text-sm text-[#F7F9F9] hover:bg-[#181919] transition-colors duration-150 flex items-center space-x-2"
+                >
+                  <Icon name="lucide:user" class="w-4 h-4 text-[#1D9BF0]" />
+                  <span>Profile</span>
+                </button>
+                <button
+                  @click="handleLogout"
+                  class="w-full px-4 py-2 text-left text-sm text-[#F7F9F9] hover:bg-[#181919] transition-colors duration-150 flex items-center space-x-2"
+                >
+                  <Icon name="lucide:log-out" class="w-4 h-4 text-[#F4212E]" />
+                  <span>Logout</span>
+                </button>
+              </div>
+            </div>
+          </Transition>
+        </div>
+      </div>
     </div>
 
-    <div class="max-w-7xl mx-auto relative z-10">
-      <!-- Header Section -->
-      <div class="text-center mb-12">
-        <div class="flex justify-between items-center mb-4">
-          <button
-            @click="handleLogout"
-            class="px-4 py-2 text-sm font-medium text-white bg-red-500/20 border border-red-500/30 rounded-lg hover:bg-red-500/30 focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-offset-2 focus:ring-offset-blue-900 transition-colors duration-200"
-          >
-            <span class="flex items-center">
-              <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1" />
-              </svg>
-              Logout
-            </span>
-          </button>
-        </div>
-        <h1 class="text-4xl font-bold text-white mb-4 animate-fade-in">Project Management</h1>
-        <p class="text-lg text-blue-100 animate-fade-in-delay-1">Add and manage your portfolio projects</p>
-      </div>
-
-      <!-- Project Form -->
-      <div class="bg-white/10 backdrop-blur-sm rounded-xl shadow-xl p-8 mb-8 border border-white/20 animate-fade-in-delay-2">
-        <div class="flex items-center justify-between mb-6">
-          <h2 class="text-2xl font-semibold text-white">Add New Project</h2>
-          <button
-            type="button"
-            @click="resetForm"
-            class="px-4 py-2 text-sm font-medium text-white bg-white/10 border border-white/20 rounded-lg hover:bg-white/20 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 focus:ring-offset-blue-900 transition-colors duration-200"
-          >
-            <span class="flex items-center">
-              <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
-              </svg>
-              Reset Form
-            </span>
-          </button>
-        </div>
-
-        <form @submit.prevent="handleSubmit" class="space-y-6">
-          <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-            <div class="relative">
-              <label for="title" class="block text-sm font-medium text-blue-100 mb-1">Project Title</label>
-              <div class="relative rounded-lg">
-                <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                  <svg class="h-5 w-5 text-blue-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
-                  </svg>
-                </div>
-                <input
-                  type="text"
-                  id="title"
-                  v-model="form.title"
-                  class="block w-full pl-10 pr-4 py-3 bg-white/10 border border-white/20 rounded-lg text-white placeholder-blue-200 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all duration-200"
-                  placeholder="Enter project title"
-                  required
-                />
-              </div>
-            </div>
-
-            <div class="relative">
-              <label for="image" class="block text-sm font-medium text-blue-100 mb-1">Image URL</label>
-              <div class="relative rounded-lg">
-                <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                  <svg class="h-5 w-5 text-blue-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
-                  </svg>
-                </div>
-                <input
-                  type="url"
-                  id="image"
-                  v-model="form.image"
-                  class="block w-full pl-10 pr-4 py-3 bg-white/10 border border-white/20 rounded-lg text-white placeholder-blue-200 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all duration-200"
-                  placeholder="https://example.com/image.jpg"
-                  required
-                />
-              </div>
-            </div>
-
-            <div class="relative">
-              <label for="linkUrl" class="block text-sm font-medium text-blue-100 mb-1">Project URL</label>
-              <div class="relative rounded-lg">
-                <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                  <svg class="h-5 w-5 text-blue-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13.828 10.172a4 4 0 00-5.656 0l-4 4a4 4 0 105.656 5.656l1.102-1.101m-.758-4.899a4 4 0 005.656 0l4-4a4 4 0 00-5.656-5.656l-1.1 1.1" />
-                  </svg>
-                </div>
-                <input
-                  type="url"
-                  id="linkUrl"
-                  v-model="form.linkUrl"
-                  class="block w-full pl-10 pr-4 py-3 bg-white/10 border border-white/20 rounded-lg text-white placeholder-blue-200 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all duration-200"
-                  placeholder="https://example.com/project"
-                  required
-                />
-              </div>
-            </div>
-
-            <div class="relative">
-              <label for="technologies" class="block text-sm font-medium text-blue-100 mb-1">Technologies</label>
-              <div class="relative rounded-lg">
-                <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                  <svg class="h-5 w-5 text-blue-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.75 17L9 20l-1 1h8l-1-1-.75-3M3 13h18M5 17h14a2 2 0 002-2V5a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
-                  </svg>
-                </div>
-                <input
-                  type="text"
-                  id="technologies"
-                  v-model="technologiesInput"
-                  class="block w-full pl-10 pr-4 py-3 bg-white/10 border border-white/20 rounded-lg text-white placeholder-blue-200 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all duration-200"
-                  placeholder="Vue.js, Node.js, MongoDB"
-                  required
-                />
-              </div>
-              <p class="mt-1 text-sm text-blue-200">Separate technologies with commas</p>
-            </div>
-          </div>
-
-          <div class="relative">
-            <label for="description" class="block text-sm font-medium text-blue-100 mb-1">Description</label>
-            <div class="relative rounded-lg">
-              <div class="absolute top-3 left-3 pointer-events-none">
-                <svg class="h-5 w-5 text-blue-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 10h16M4 14h16M4 18h16" />
-                </svg>
-              </div>
-              <textarea
-                id="description"
-                v-model="form.description"
-                rows="4"
-                class="block w-full pl-10 pr-4 py-3 bg-white/10 border border-white/20 rounded-lg text-white placeholder-blue-200 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all duration-200 resize-none"
-                placeholder="Enter project description"
-                required
-              ></textarea>
-            </div>
-          </div>
-
-          <div v-if="error" class="rounded-lg bg-red-500/20 p-4 border border-red-500/30">
-            <div class="flex">
-              <div class="flex-shrink-0">
-                <svg class="h-5 w-5 text-red-400" viewBox="0 0 20 20" fill="currentColor">
-                  <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clip-rule="evenodd" />
-                </svg>
-              </div>
-              <div class="ml-3">
-                <p class="text-sm text-red-200">{{ error }}</p>
-              </div>
-            </div>
-          </div>
-
-          <div class="flex justify-end">
-            <button
-              type="submit"
-              class="inline-flex items-center px-6 py-3 border border-transparent text-base font-medium rounded-lg text-white bg-gradient-to-r from-blue-500 to-purple-500 hover:from-blue-600 hover:to-purple-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 focus:ring-offset-blue-900 transition-colors duration-200 disabled:opacity-50 disabled:cursor-not-allowed transform hover:scale-105"
-              :disabled="loading"
-            >
-              <svg v-if="loading" class="animate-spin -ml-1 mr-3 h-5 w-5 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
-                <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
-                <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
-              </svg>
-              {{ loading ? 'Saving...' : 'Save Project' }}
-            </button>
-          </div>
-        </form>
-      </div>
-
-      <!-- Projects List -->
-      <div class="bg-white/10 backdrop-blur-sm rounded-xl shadow-xl p-8 border border-white/20 animate-fade-in-delay-2">
-        <div class="flex items-center justify-between mb-6">
-          <h2 class="text-2xl font-semibold text-white">Existing Projects</h2>
-          <div class="text-sm text-blue-100">
-            {{ projects.length }} project{{ projects.length !== 1 ? 's' : '' }}
-          </div>
-        </div>
-
-        <div class="space-y-4">
-          <div v-if="projectsLoading" class="flex justify-center py-12">
-            <div class="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-blue-500"></div>
-          </div>
-          
-          <div v-else-if="projectsError" class="rounded-lg bg-red-500/20 p-4 border border-red-500/30">
-            <div class="flex">
-              <div class="flex-shrink-0">
-                <svg class="h-5 w-5 text-red-400" viewBox="0 0 20 20" fill="currentColor">
-                  <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clip-rule="evenodd" />
-                </svg>
-              </div>
-              <div class="ml-3">
-                <p class="text-sm text-red-200">{{ projectsError }}</p>
-              </div>
-            </div>
-          </div>
-
-          <div v-else-if="projects.length === 0" class="text-center py-12">
-            <svg class="mx-auto h-12 w-12 text-blue-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+    <!-- Dashboard Content -->
+    <div class="max-w-7xl mx-auto px-4 py-8">
+      <!-- Stats Grid -->
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-8">
+        <!-- Total Projects Card -->
+        <div class="border border-[#2F3336] rounded-lg p-6 hover:bg-[#181919] transition-colors duration-150">
+          <div class="flex items-center justify-between mb-2">
+            <h3 class="text-sm font-medium text-[#71767A]">Total Projects</h3>
+            <svg class="w-5 h-5 text-[#1D9BF0]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10" />
             </svg>
-            <h3 class="mt-2 text-sm font-medium text-white">No projects</h3>
-            <p class="mt-1 text-sm text-blue-100">Get started by creating a new project.</p>
           </div>
+          <div v-if="statsLoading" class="animate-pulse">
+            <div class="h-8 w-16 bg-[#2F3336] rounded"></div>
+          </div>
+          <p v-else class="text-3xl font-bold">{{ stats?.totalProjects ?? 0 }}</p>
+        </div>
 
-          <div v-else class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            <div v-for="project in projects" :key="project._id" class="bg-white/5 backdrop-blur-sm border border-white/10 rounded-xl overflow-hidden hover:shadow-lg transition-shadow duration-200">
-              <div class="relative">
-                <img :src="project.image" :alt="project.title" class="w-full h-48 object-cover">
-                <div class="absolute top-2 right-2 flex space-x-2">
-                  <button
-                    @click="editProject(project)"
-                    class="p-2 bg-white/10 backdrop-blur-sm border border-white/20 rounded-lg hover:bg-white/20 transition-colors duration-200"
-                    title="Edit project"
-                  >
-                    <svg class="w-5 h-5 text-blue-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
-                    </svg>
-                  </button>
-                  <button
-                    @click="deleteProject(project._id)"
-                    class="p-2 bg-white/10 backdrop-blur-sm border border-white/20 rounded-lg hover:bg-white/20 transition-colors duration-200"
-                    title="Delete project"
-                  >
-                    <svg class="w-5 h-5 text-red-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
-                    </svg>
-                  </button>
-                </div>
+        <!-- Recent Activity Card -->
+        <div class="border border-[#2F3336] rounded-lg p-6 hover:bg-[#181919] transition-colors duration-150">
+          <div class="flex items-center justify-between mb-2">
+            <h3 class="text-sm font-medium text-[#71767A]">Recent Activity</h3>
+            <svg class="w-5 h-5 text-[#1D9BF0]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+            </svg>
+          </div>
+          <div v-if="statsLoading" class="animate-pulse">
+            <div class="h-8 w-20 bg-[#2F3336] rounded"></div>
+          </div>
+          <p v-else class="text-3xl font-bold">{{ stats?.recentProjects || 0 }}</p>
+          <p class="text-xs text-[#71767A] mt-1">Last 7 days</p>
+        </div>
+
+        <!-- User Info Card -->
+        <div class="border border-[#2F3336] rounded-lg p-6 hover:bg-[#181919] transition-colors duration-150">
+          <div class="flex items-center justify-between mb-2">
+            <h3 class="text-sm font-medium text-[#71767A]">Welcome</h3>
+            <svg class="w-5 h-5 text-[#1D9BF0]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
+            </svg>
+          </div>
+          <div v-if="statsLoading" class="animate-pulse">
+            <div class="h-6 w-24 bg-[#2F3336] rounded"></div>
+          </div>
+          <p v-else class="text-lg font-semibold">{{ userInfo?.username || 'Admin' }}</p>
+        </div>
+      </div>
+
+      <!-- Quick Actions -->
+      <div class="mb-8">
+        <h2 class="text-lg font-bold mb-4">Quick Actions</h2>
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+          <!-- Content Management System Card -->
+          <NuxtLink
+            to="/admin/projects"
+            class="border border-[#2F3336] rounded-lg p-6 hover:bg-[#181919] transition-all duration-150 group cursor-pointer"
+          >
+            <div class="flex items-center space-x-4">
+              <div class="p-3 bg-[#1D9BF0]/10 rounded-lg group-hover:bg-[#1D9BF0]/20 transition-colors">
+                <svg class="w-6 h-6 text-[#1D9BF0]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 5a1 1 0 011-1h14a1 1 0 011 1v2a1 1 0 01-1 1H5a1 1 0 01-1-1V5zM4 13a1 1 0 011-1h6a1 1 0 011 1v6a1 1 0 01-1 1H5a1 1 0 01-1-1v-6zM16 13a1 1 0 011-1h2a1 1 0 011 1v6a1 1 0 01-1 1h-2a1 1 0 01-1-1v-6z" />
+                </svg>
               </div>
-              <div class="p-6">
-                <h3 class="text-lg font-semibold text-white mb-2">{{ project.title }}</h3>
-                <p class="text-sm text-blue-100 mb-4 line-clamp-3">{{ project.description }}</p>
-                <div class="mb-4">
-                  <h4 class="text-sm font-medium text-blue-100 mb-2">Technologies</h4>
-                  <div class="flex flex-wrap gap-2">
-                    <span v-for="tech in project.technologies" :key="tech" class="px-2 py-1 bg-blue-500/20 text-blue-300 rounded-full text-xs font-medium">
-                      {{ tech }}
-                    </span>
-                  </div>
-                </div>
-                <a 
-                  :href="project.linkUrl" 
-                  target="_blank" 
-                  class="inline-flex items-center text-sm font-medium text-blue-400 hover:text-blue-300 transition-colors duration-200"
+              <div class="flex-1">
+                <h3 class="font-bold mb-1">Content Management System</h3>
+                <p class="text-sm text-[#71767A]">Manage the content of your website's project sections</p>
+              </div>
+              <svg class="w-5 h-5 text-[#71767A] group-hover:text-[#1D9BF0] transition-colors" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
+              </svg>
+            </div>
+          </NuxtLink>
+
+          <!-- Project Ticketing System Card -->
+          <NuxtLink
+            to="/admin/tickets"
+            class="border border-[#2F3336] rounded-lg p-6 hover:bg-[#181919] transition-all duration-150 group cursor-pointer"
+          >
+            <div class="flex items-center space-x-4">
+              <div class="p-3 bg-[#1D9BF0]/10 rounded-lg group-hover:bg-[#1D9BF0]/20 transition-colors">
+                <svg class="w-6 h-6 text-[#1D9BF0]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+                </svg>
+              </div>
+              <div class="flex-1">
+                <h3 class="font-bold mb-1">Project Ticketing System</h3>
+                <p class="text-sm text-[#71767A]">Manage and track project tickets and issues</p>
+              </div>
+              <svg class="w-5 h-5 text-[#71767A] group-hover:text-[#1D9BF0] transition-colors" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
+              </svg>
+            </div>
+          </NuxtLink>
+
+          <!-- Settings Card (Placeholder for future) -->
+          <div class="border border-[#2F3336] rounded-lg p-6 hover:bg-[#181919] transition-all duration-150 opacity-50 cursor-not-allowed">
+            <div class="flex items-center space-x-4">
+              <div class="p-3 bg-[#2F3336] rounded-lg">
+                <svg class="w-6 h-6 text-[#71767A]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z" />
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+                </svg>
+              </div>
+              <div class="flex-1">
+                <h3 class="font-bold mb-1">Settings</h3>
+                <p class="text-sm text-[#71767A]">Coming soon</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Recent Projects Preview -->
+      <div v-if="!statsLoading && recentProjects.length > 0">
+        <div class="flex items-center justify-between mb-4">
+          <h2 class="text-lg font-bold">Recent Projects</h2>
+          <NuxtLink
+            to="/admin/projects"
+            class="text-sm text-[#1D9BF0] hover:underline"
+          >
+            View all
+          </NuxtLink>
+        </div>
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+          <div
+            v-for="project in recentProjects"
+            :key="project._id"
+            class="border border-[#2F3336] rounded-lg overflow-hidden hover:bg-[#181919] transition-colors duration-150"
+          >
+            <div class="aspect-video overflow-hidden">
+              <img :src="project.image" :alt="project.title" class="w-full h-full object-cover">
+            </div>
+            <div class="p-4">
+              <h3 class="font-bold mb-1 line-clamp-1">{{ project.title }}</h3>
+              <p class="text-sm text-[#71767A] line-clamp-2 mb-3">{{ project.description }}</p>
+              <div class="flex flex-wrap gap-2">
+                <span
+                  v-for="tech in project.technologies.slice(0, 3)"
+                  :key="tech"
+                  class="px-2 py-0.5 bg-[#2F3336] text-[#71767A] rounded-full text-xs"
                 >
-                  View Project
-                  <svg class="w-4 h-4 ml-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
-                  </svg>
-                </a>
+                  {{ tech }}
+                </span>
+                <span v-if="project.technologies.length > 3" class="px-2 py-0.5 text-[#71767A] text-xs">
+                  +{{ project.technologies.length - 3 }}
+                </span>
               </div>
             </div>
           </div>
         </div>
       </div>
     </div>
+
+    <!-- Profile Modal -->
+    <Teleport to="body">
+      <Transition name="modal">
+        <div 
+          v-if="showProfileModal"
+          @click.self="closeProfileModal"
+          class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 backdrop-blur-sm"
+        >
+          <div class="bg-[#16181C] border border-[#2F3336] rounded-2xl max-w-2xl w-full shadow-2xl">
+            <!-- Modal Header -->
+            <div class="flex items-center justify-between p-4 border-b border-[#2F3336]">
+              <h2 class="text-lg font-bold text-[#F7F9F9]">Edit Profile</h2>
+              <button
+                @click="closeProfileModal"
+                class="p-2 rounded-full hover:bg-[#181919] transition-colors duration-150"
+                title="Close"
+              >
+                <Icon name="lucide:x" class="w-5 h-5 text-[#71767A]" />
+              </button>
+            </div>
+
+            <!-- Modal Body -->
+            <div class="p-4">
+              <form @submit.prevent="handleProfileSubmit" class="space-y-4">
+                <!-- Avatar Upload -->
+                <div class="flex flex-col items-center mb-6">
+                  <div class="relative group">
+                    <div class="w-32 h-32 rounded-full bg-[#1D9BF0]/20 border-4 border-[#1D9BF0] flex items-center justify-center overflow-hidden">
+                      <NuxtImg 
+                        v-if="profileForm.avatar" 
+                        :src="profileForm.avatar" 
+                        alt="Avatar"
+                        class="w-full h-full object-cover"
+                        preset="avatar"
+                      />
+                      <Icon 
+                        v-else
+                        name="lucide:user" 
+                        class="w-16 h-16 text-[#1D9BF0]"
+                      />
+                    </div>
+                    <label
+                      for="avatar-upload"
+                      class="absolute inset-0 flex items-center justify-center bg-black/50 opacity-0 group-hover:opacity-100 transition-opacity duration-200 cursor-pointer rounded-full"
+                    >
+                      <Icon name="lucide:camera" class="w-6 h-6 text-white" />
+                    </label>
+                    <input
+                      type="file"
+                      id="avatar-upload"
+                      ref="avatarInput"
+                      @change="handleAvatarSelect"
+                      accept="image/jpeg,image/jpg,image/png,image/webp"
+                      class="hidden"
+                      :disabled="uploading"
+                    />
+                  </div>
+                  <p class="text-xs text-[#71767A] mt-2">Click to upload avatar (max 5MB)</p>
+                  <!-- Upload Progress -->
+                  <div v-if="uploading && uploadProgress !== undefined" class="mt-3 w-full max-w-xs">
+                    <div class="flex items-center justify-between mb-1">
+                      <span class="text-xs text-[#71767A]">Uploading...</span>
+                      <span class="text-xs text-[#71767A]">{{ Math.round(uploadProgress || 0) }}%</span>
+                    </div>
+                    <div class="w-full bg-[#2F3336] rounded-full h-1">
+                      <div 
+                        class="bg-[#1D9BF0] h-1 rounded-full transition-all duration-300"
+                        :style="{ width: `${uploadProgress || 0}%` }"
+                      ></div>
+                    </div>
+                  </div>
+                </div>
+
+                <!-- Username -->
+                <div>
+                  <label for="username" class="block text-sm font-medium text-[#71767A] mb-2">Username</label>
+                  <input
+                    type="text"
+                    id="username"
+                    v-model="profileForm.username"
+                    class="w-full px-4 py-3 bg-transparent border border-[#2F3336] rounded-lg text-[#F7F9F9] placeholder-[#71767A] focus:outline-none focus:border-[#1D9BF0] focus:ring-1 focus:ring-[#1D9BF0] transition-colors"
+                    placeholder="Username"
+                    required
+                  />
+                </div>
+
+                <!-- Email -->
+                <div>
+                  <label for="email" class="block text-sm font-medium text-[#71767A] mb-2">Email</label>
+                  <input
+                    type="email"
+                    id="email"
+                    v-model="profileForm.email"
+                    class="w-full px-4 py-3 bg-transparent border border-[#2F3336] rounded-lg text-[#F7F9F9] placeholder-[#71767A] focus:outline-none focus:border-[#1D9BF0] focus:ring-1 focus:ring-[#1D9BF0] transition-colors"
+                    placeholder="Email"
+                    required
+                  />
+                </div>
+
+                <!-- First Name and Last Name -->
+                <div class="grid grid-cols-2 gap-4">
+                  <div>
+                    <label for="firstName" class="block text-sm font-medium text-[#71767A] mb-2">First Name</label>
+                    <input
+                      type="text"
+                      id="firstName"
+                      v-model="profileForm.firstName"
+                      class="w-full px-4 py-3 bg-transparent border border-[#2F3336] rounded-lg text-[#F7F9F9] placeholder-[#71767A] focus:outline-none focus:border-[#1D9BF0] focus:ring-1 focus:ring-[#1D9BF0] transition-colors"
+                      placeholder="First Name"
+                    />
+                  </div>
+                  <div>
+                    <label for="lastName" class="block text-sm font-medium text-[#71767A] mb-2">Last Name</label>
+                    <input
+                      type="text"
+                      id="lastName"
+                      v-model="profileForm.lastName"
+                      class="w-full px-4 py-3 bg-transparent border border-[#2F3336] rounded-lg text-[#F7F9F9] placeholder-[#71767A] focus:outline-none focus:border-[#1D9BF0] focus:ring-1 focus:ring-[#1D9BF0] transition-colors"
+                      placeholder="Last Name"
+                    />
+                  </div>
+                </div>
+
+                <!-- Phone -->
+                <div>
+                  <label for="phone" class="block text-sm font-medium text-[#71767A] mb-2">Phone</label>
+                  <input
+                    type="tel"
+                    id="phone"
+                    v-model="profileForm.phone"
+                    class="w-full px-4 py-3 bg-transparent border border-[#2F3336] rounded-lg text-[#F7F9F9] placeholder-[#71767A] focus:outline-none focus:border-[#1D9BF0] focus:ring-1 focus:ring-[#1D9BF0] transition-colors"
+                    placeholder="Phone number"
+                  />
+                </div>
+
+                <!-- Success Message -->
+                <div v-if="profileSuccess" class="p-3 bg-[#2F3336] border border-[#00BA7C]/30 rounded-lg flex items-center space-x-2">
+                  <Icon name="lucide:check-circle" class="w-5 h-5 text-[#00BA7C] flex-shrink-0" />
+                  <p class="text-sm text-[#00BA7C]">{{ profileSuccess }}</p>
+                </div>
+
+                <!-- Error Message -->
+                <div v-if="profileError" class="p-3 bg-[#2F3336] border border-[#F4212E]/30 rounded-lg flex items-center space-x-2">
+                  <Icon name="lucide:alert-circle" class="w-5 h-5 text-[#F4212E] flex-shrink-0" />
+                  <p class="text-sm text-[#F4212E]">{{ profileError }}</p>
+                </div>
+
+                <!-- Submit Button -->
+                <div class="flex justify-end pt-2 space-x-3">
+                  <button
+                    type="button"
+                    @click="closeProfileModal"
+                    class="px-6 py-2.5 text-white font-bold rounded-full hover:bg-[#181919] focus:outline-none transition-colors duration-150"
+                  >
+                    Cancel
+                  </button>
+                  <button
+                    type="submit"
+                    class="px-6 py-2.5 bg-[#1D9BF0] text-white font-bold rounded-full hover:bg-[#1a8cd8] focus:outline-none focus:ring-2 focus:ring-[#1D9BF0] focus:ring-offset-2 focus:ring-offset-black transition-colors duration-150 disabled:opacity-50 disabled:cursor-not-allowed"
+                    :disabled="profileLoading || uploading"
+                  >
+                    <span v-if="profileLoading || uploading" class="flex items-center">
+                      <svg class="animate-spin -ml-1 mr-2 h-4 w-4 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                        <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                        <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                      </svg>
+                      {{ uploading ? 'Uploading...' : 'Saving...' }}
+                    </span>
+                    <span v-else>Save Changes</span>
+                  </button>
+                </div>
+              </form>
+            </div>
+          </div>
+        </div>
+      </Transition>
+    </Teleport>
   </div>
 </template>
 
-<script setup>
-import { ref, computed, onMounted } from 'vue'
-import { useRouter } from 'vue-router'
-import { useRuntimeConfig } from '#app'
+<script setup lang="ts">
+definePageMeta({
+  ssr: false
+})
+
+import { useFirebaseStorage } from '~/composables/useFirebaseStorage'
 
 const router = useRouter()
+const { uploadImage, uploading, uploadProgress } = useFirebaseStorage() || { uploadImage: () => Promise.resolve(''), uploading: ref(false), uploadProgress: ref(0) }
 
-const form = ref({
-  title: '',
-  description: '',
-  image: '',
-  technologies: [],
-  linkUrl: ''
+interface Project {
+  _id: string
+  title: string
+  description: string
+  image: string
+  technologies: string[]
+  linkUrl: string
+  createdAt?: string
+}
+
+interface Stats {
+  totalProjects: number
+  recentProjects: number
+}
+
+interface ProfileForm {
+  username: string
+  email: string
+  avatar: string
+  firstName: string
+  lastName: string
+  phone: string
+}
+
+const stats = ref<Stats>({
+  totalProjects: 0,
+  recentProjects: 0
 })
 
-const technologiesInput = computed({
-  get: () => form.value.technologies.join(', '),
-  set: (value) => {
-    form.value.technologies = value.split(',').map(tech => tech.trim()).filter(tech => tech)
-  }
+const statsLoading = ref(true)
+const projects = ref<Project[]>([])
+const userInfo = ref<any>(null)
+const isDropdownOpen = ref(false)
+const dropdownRef = ref<HTMLElement | null>(null)
+const showProfileModal = ref(false)
+const profileLoading = ref(false)
+const profileError = ref<string | null>(null)
+const profileSuccess = ref<string | null>(null)
+const avatarFile = ref<File | null>(null)
+const avatarInput = ref<HTMLInputElement | null>(null)
+
+const profileForm = ref<ProfileForm>({
+  username: '',
+  email: '',
+  avatar: '',
+  firstName: '',
+  lastName: '',
+  phone: ''
 })
 
-const loading = ref(false)
-const projects = ref([])
-const projectsLoading = ref(true)
-const projectsError = ref(null)
-const error = ref(null)
+const toggleDropdown = () => {
+  isDropdownOpen.value = !isDropdownOpen.value
+}
 
-const fetchProjects = async () => {
-  try {
-    projectsLoading.value = true
-    const response = await fetch('/api/projects')
-    if (!response.ok) throw new Error('Failed to fetch projects')
-    projects.value = await response.json()
-  } catch (error) {
-    projectsError.value = error.message
-    console.error('Error fetching projects:', error)
-  } finally {
-    projectsLoading.value = false
+const closeDropdown = () => {
+  isDropdownOpen.value = false
+}
+
+// Close dropdown when clicking outside
+const handleClickOutside = (event: MouseEvent) => {
+  if (dropdownRef.value && !dropdownRef.value.contains(event.target as Node)) {
+    closeDropdown()
   }
 }
 
-const handleSubmit = async () => {
-  try {
-    loading.value = true
-    error.value = null
+const recentProjects = computed(() => {
+  return projects.value.slice(0, 3)
+})
 
-    const response = await fetch('/api/projects', {
-      method: 'POST',
+const fetchStats = async () => {
+  try {
+    statsLoading.value = true
+    const response = await fetch('/api/projects')
+    if (!response.ok) throw new Error('Failed to fetch projects')
+    
+    const allProjects = await response.json() as Project[]
+    projects.value = allProjects
+    
+    // Calculate stats
+    stats.value.totalProjects = allProjects.length
+    
+    // Count projects from last 7 days
+    const sevenDaysAgo = new Date()
+    sevenDaysAgo.setDate(sevenDaysAgo.getDate() - 7)
+    
+    stats.value.recentProjects = allProjects.filter((project: Project) => {
+      if (!project.createdAt) return false
+      const createdDate = new Date(project.createdAt)
+      return createdDate >= sevenDaysAgo
+    }).length
+  } catch (err) {
+    console.error('Error fetching stats:', err)
+  } finally {
+    statsLoading.value = false
+  }
+}
+
+const openProfileModal = async () => {
+  closeDropdown()
+  // Fetch current profile data
+  try {
+    const response = await fetch('/api/auth/profile')
+    if (response.ok) {
+      const profileData = await response.json()
+      profileForm.value = {
+        username: profileData.username || '',
+        email: profileData.email || '',
+        avatar: profileData.avatar || '',
+        firstName: profileData.firstName || '',
+        lastName: profileData.lastName || '',
+        phone: profileData.phone || ''
+      }
+    }
+  } catch (err) {
+    console.error('Error fetching profile:', err)
+  }
+  showProfileModal.value = true
+}
+
+const closeProfileModal = () => {
+  showProfileModal.value = false
+  profileError.value = null
+  profileSuccess.value = null
+  avatarFile.value = null
+  if (avatarInput.value) {
+    avatarInput.value.value = ''
+  }
+}
+
+const handleAvatarSelect = (event: Event) => {
+  const target = event.target as HTMLInputElement
+  const file = target.files?.[0]
+  if (!file) {
+    avatarFile.value = null
+    return
+  }
+
+  // Validate file type
+  const validTypes = ['image/jpeg', 'image/jpg', 'image/png', 'image/webp']
+  if (!validTypes.includes(file.type)) {
+    profileError.value = 'Invalid file type. Please upload a JPEG, PNG, or WebP image.'
+    if (avatarInput.value) {
+      avatarInput.value.value = ''
+    }
+    avatarFile.value = null
+    return
+  }
+
+  // Validate file size (5MB limit)
+  const maxSize = 5 * 1024 * 1024 // 5MB
+  if (file.size > maxSize) {
+    profileError.value = 'File size exceeds 5MB limit. Please upload a smaller image.'
+    if (avatarInput.value) {
+      avatarInput.value.value = ''
+    }
+    avatarFile.value = null
+    return
+  }
+
+  avatarFile.value = file
+  profileError.value = null
+
+  // Create preview
+  const reader = new FileReader()
+  reader.onload = (e) => {
+    const result = e.target?.result
+    if (typeof result === 'string') {
+      profileForm.value.avatar = result
+    }
+  }
+  reader.readAsDataURL(file)
+}
+
+const handleProfileSubmit = async () => {
+  try {
+    profileLoading.value = true
+    profileError.value = null
+    profileSuccess.value = null
+
+    // If a new avatar file is selected, upload it first
+    if (avatarFile.value) {
+      try {
+        const imageUrl = await uploadImage(avatarFile.value, 'avatars')
+        profileForm.value.avatar = imageUrl
+      } catch (uploadErr) {
+        const uploadError = uploadErr as Error
+        console.error('Error uploading avatar:', uploadError)
+        profileError.value = uploadError.message || 'Failed to upload avatar'
+        profileLoading.value = false
+        return
+      }
+    }
+
+    // Update profile
+    const response = await fetch('/api/auth/profile', {
+      method: 'PUT',
       headers: {
         'Content-Type': 'application/json'
       },
-      body: JSON.stringify(form.value)
+      body: JSON.stringify(profileForm.value)
     })
 
     if (!response.ok) {
       const errorData = await response.json()
-      throw new Error(errorData.message || 'Failed to save project')
+      throw new Error(errorData.message || 'Failed to update profile')
     }
 
-    await fetchProjects()
-    resetForm()
-  } catch (err) {
-    console.error('Error saving project:', err)
-    error.value = err.message || 'Failed to save project'
-  } finally {
-    loading.value = false
-  }
-}
-
-const resetForm = () => {
-  form.value = {
-    title: '',
-    description: '',
-    image: '',
-    technologies: [],
-    linkUrl: ''
-  }
-}
-
-const editProject = (project) => {
-  form.value = { ...project }
-}
-
-const deleteProject = async (id) => {
-  if (!confirm('Are you sure you want to delete this project?')) return
-
-  try {
-    const response = await fetch(`/api/projects/${id}`, {
-      method: 'DELETE'
-    })
-
-    if (!response.ok) throw new Error('Failed to delete project')
+    const result = await response.json()
     
-    await fetchProjects()
-  } catch (error) {
-    console.error('Error deleting project:', error)
+    // Update userInfo and localStorage
+    userInfo.value = result.user
+    localStorage.setItem('user', JSON.stringify(result.user))
+    
+    // Show success message
+    profileError.value = null
+    profileSuccess.value = 'Profile updated successfully!'
+    
+    // Close modal after a short delay so user can see the success message
+    setTimeout(() => {
+      closeProfileModal()
+    }, 1500)
+  } catch (err) {
+    const errorObj = err as Error
+    console.error('Error updating profile:', errorObj)
+    profileSuccess.value = null
+    profileError.value = errorObj.message || 'Failed to update profile'
+  } finally {
+    profileLoading.value = false
   }
 }
 
 const handleLogout = async () => {
   try {
+    closeDropdown()
     const response = await fetch('/api/auth/logout', {
       method: 'POST'
     })
@@ -384,8 +659,19 @@ const handleLogout = async () => {
     
     // Redirect to login page
     router.push('/admin/auth')
-  } catch (error) {
-    console.error('Error logging out:', error)
+  } catch (err) {
+    console.error('Error logging out:', err)
+  }
+}
+
+const handleEscape = (e: KeyboardEvent) => {
+  if (e.key === 'Escape') {
+    if (showProfileModal.value) {
+      closeProfileModal()
+    }
+    if (isDropdownOpen.value) {
+      closeDropdown()
+    }
   }
 }
 
@@ -396,59 +682,67 @@ onMounted(() => {
     router.push('/admin/auth')
     return
   }
+
+  // Get user info from localStorage
+  const userStr = localStorage.getItem('user')
+  if (userStr) {
+    try {
+      const user = JSON.parse(userStr)
+      userInfo.value = user
+      
+      // Redirect client users to support dashboard
+      if (user.role === 'user') {
+        router.push('/support/dashboard')
+        return
+      }
+    } catch (e) {
+      console.error('Error parsing user info:', e)
+    }
+  }
   
-  fetchProjects()
+  fetchStats()
+  document.addEventListener('click', handleClickOutside)
+  window.addEventListener('keydown', handleEscape)
+})
+
+onUnmounted(() => {
+  document.removeEventListener('click', handleClickOutside)
+  window.removeEventListener('keydown', handleEscape)
 })
 </script>
 
 <style scoped>
-.animate-fade-in {
-  animation: fadeIn 1s ease-out forwards;
+/* Dropdown transition */
+.dropdown-enter-active,
+.dropdown-leave-active {
+  transition: opacity 0.2s ease, transform 0.2s ease;
 }
 
-.animate-fade-in-delay-1 {
-  animation: fadeIn 1s ease-out 0.2s forwards;
+.dropdown-enter-from,
+.dropdown-leave-to {
+  opacity: 0;
+  transform: translateY(-10px);
+}
+
+/* Modal transitions */
+.modal-enter-active,
+.modal-leave-active {
+  transition: opacity 0.2s ease;
+}
+
+.modal-enter-active > div,
+.modal-leave-active > div {
+  transition: transform 0.2s ease, opacity 0.2s ease;
+}
+
+.modal-enter-from,
+.modal-leave-to {
   opacity: 0;
 }
 
-.animate-fade-in-delay-2 {
-  animation: fadeIn 1s ease-out 0.4s forwards;
+.modal-enter-from > div,
+.modal-leave-to > div {
+  transform: scale(0.95) translateY(-10px);
   opacity: 0;
 }
-
-.animate-float-1 {
-  animation: float 6s ease-in-out infinite;
-}
-
-.animate-float-2 {
-  animation: float 8s ease-in-out infinite;
-}
-
-.animate-float-3 {
-  animation: float 7s ease-in-out infinite;
-}
-
-.animate-float-4 {
-  animation: float 9s ease-in-out infinite;
-}
-
-@keyframes fadeIn {
-  from {
-    opacity: 0;
-    transform: translateY(20px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
-}
-
-@keyframes float {
-  0%, 100% {
-    transform: translateY(0);
-  }
-  50% {
-    transform: translateY(-20px);
-  }
-}
-</style> 
+</style>

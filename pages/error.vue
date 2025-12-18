@@ -31,7 +31,7 @@ const handleError = () => {
 }
 </script>
 
-<style>
+<style scoped>
 .error-page {
   min-height: 100vh;
   display: flex;

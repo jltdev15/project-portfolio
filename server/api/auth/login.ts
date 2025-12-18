@@ -1,4 +1,4 @@
-import { defineEventHandler, readBody, setCookie, getCookie } from 'h3'
+import { defineEventHandler, readBody, setCookie, getCookie, createError } from 'h3'
 import { connectDB } from '../../utils/db'
 import { User } from '../../models/User'
 import jwt from 'jsonwebtoken'
@@ -33,7 +33,8 @@ export default defineEventHandler(async (event) => {
       { 
         userId: user._id,
         username: user.username,
-        role: user.role
+        role: user.role,
+        projectId: user.projectId ? user.projectId.toString() : null
       },
       JWT_SECRET,
       { expiresIn: '24h' }
@@ -52,7 +53,10 @@ export default defineEventHandler(async (event) => {
     delete userResponse.password
 
     return {
-      user: userResponse,
+      user: {
+        ...userResponse,
+        projectId: user.projectId ? user.projectId.toString() : null
+      },
       token
     }
   } catch (error: any) {

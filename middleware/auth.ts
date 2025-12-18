@@ -1,7 +1,7 @@
 export default defineNuxtRouteMiddleware((to) => {
   const runtimeConfig = useRuntimeConfig()
   
-  // Only check admin routes
+  // Check admin routes - prevent client users from accessing
   if (to.path.startsWith('/admin')) {
     // Client-side check
     if (runtimeConfig.app.client) {
@@ -9,8 +9,32 @@ export default defineNuxtRouteMiddleware((to) => {
       const token = useCookie('auth_token').value
       const user = localStorage.getItem('user')
 
+      // Check if user is a client (non-admin) trying to access admin routes
+      if (user) {
+        try {
+          const userData = JSON.parse(user)
+          if (userData.role === 'user' && to.path !== '/admin/auth' && to.path !== '/admin/auth/register') {
+            // Client users cannot access admin routes - redirect to support dashboard
+            return navigateTo('/support/dashboard')
+          }
+        } catch (e) {
+          // Error parsing user, continue with normal auth check
+        }
+      }
+
       // If any authentication state exists and trying to access login/register
       if ((isAuthenticated || token || user) && (to.path === '/admin/auth' || to.path === '/admin/auth/register')) {
+        // Check user role to redirect appropriately
+        if (user) {
+          try {
+            const userData = JSON.parse(user)
+            if (userData.role === 'user') {
+              return navigateTo('/support/dashboard')
+            }
+          } catch (e) {
+            // Error parsing, default to admin
+          }
+        }
         return navigateTo('/admin')
       }
 

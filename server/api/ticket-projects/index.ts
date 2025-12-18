@@ -1,18 +1,18 @@
 import { defineEventHandler, readBody, createError } from 'h3'
 import { connectDB } from '../../utils/db'
-import { Project } from '../../models/Project'
+import { TicketProject } from '../../models/TicketProject'
 
-// GET all projects
+// GET all ticket projects or POST new ticket project
 export default defineEventHandler(async (event) => {
   try {
     await connectDB()
     
     if (event.method === 'GET') {
-      const projects = await Project.find().sort({ createdAt: -1 })
+      const projects = await TicketProject.find().sort({ createdAt: -1 })
       return projects
     }
 
-    // POST new project
+    // POST new ticket project
     if (event.method === 'POST') {
       const body = await readBody(event)
       
@@ -35,12 +35,10 @@ export default defineEventHandler(async (event) => {
         }
       }
 
-      // Create new project with auto-generated fields
-      const project = new Project({
+      // Create new ticket project with auto-generated fields
+      const project = new TicketProject({
         title: title || 'New Project',
         description: body.description || `Project owned by ${body.owner}`,
-        image: body.image || '',
-        technologies: body.technologies || [],
         linkUrl: body.linkUrl,
         owner: body.owner
       })
@@ -49,7 +47,7 @@ export default defineEventHandler(async (event) => {
         const savedProject = await project.save()
         return savedProject
       } catch (saveError: any) {
-        console.error('Project save error:', saveError)
+        console.error('Ticket project save error:', saveError)
         throw createError({
           statusCode: 500,
           message: saveError.message || 'Failed to save project'
@@ -63,4 +61,5 @@ export default defineEventHandler(async (event) => {
       message: error.message || 'Internal Server Error'
     })
   }
-}) 
+})
+

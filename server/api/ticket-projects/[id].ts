@@ -1,25 +1,32 @@
-import { defineEventHandler, readBody, createError } from 'h3'
+import { defineEventHandler, readBody, createError, getRouterParam } from 'h3'
 import { connectDB } from '../../utils/db'
-import { Project } from '../../models/Project'
+import { TicketProject } from '../../models/TicketProject'
 
 export default defineEventHandler(async (event) => {
   try {
     await connectDB()
-    const id = event.context.params?.id
+    const id = getRouterParam(event, 'id')
 
-    // GET single project
+    if (!id) {
+      throw createError({
+        statusCode: 400,
+        message: 'Project ID is required'
+      })
+    }
+
+    // GET single ticket project
     if (event.method === 'GET') {
-      const project = await Project.findById(id)
+      const project = await TicketProject.findById(id)
       if (!project) {
         throw createError({
           statusCode: 404,
-          message: 'Project not found'
+          message: 'Ticket project not found'
         })
       }
       return project
     }
 
-    // PUT update project
+    // PUT update ticket project
     if (event.method === 'PUT') {
       const body = await readBody(event)
       
@@ -30,32 +37,33 @@ export default defineEventHandler(async (event) => {
       if (body.title !== undefined) updateData.title = body.title
       if (body.description !== undefined) updateData.description = body.description
       
-      const project = await Project.findByIdAndUpdate(id, updateData, { new: true })
+      const project = await TicketProject.findByIdAndUpdate(id, updateData, { new: true })
       if (!project) {
         throw createError({
           statusCode: 404,
-          message: 'Project not found'
+          message: 'Ticket project not found'
         })
       }
       return project
     }
 
-    // DELETE project
+    // DELETE ticket project
     if (event.method === 'DELETE') {
-      const project = await Project.findByIdAndDelete(id)
+      const project = await TicketProject.findByIdAndDelete(id)
       if (!project) {
         throw createError({
           statusCode: 404,
-          message: 'Project not found'
+          message: 'Ticket project not found'
         })
       }
-      return { message: 'Project deleted successfully' }
+      return { message: 'Ticket project deleted successfully' }
     }
-  } catch (error) {
+  } catch (error: any) {
     console.error('API Error:', error)
     throw createError({
-      statusCode: 500,
-      message: 'Internal Server Error'
+      statusCode: error.statusCode || 500,
+      message: error.message || 'Internal Server Error'
     })
   }
-}) 
+})
+

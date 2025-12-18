@@ -3,24 +3,30 @@ import mongoose from 'mongoose'
 const projectSchema = new mongoose.Schema({
   title: {
     type: String,
-    required: true,
-    trim: true
+    trim: true,
+    default: ''
   },
   description: {
     type: String,
-    required: true
+    default: ''
   },
   image: {
     type: String,
-    required: true
+    default: ''
   },
   technologies: [{
     type: String,
-    required: true
+    trim: true
   }],
   linkUrl: {
     type: String,
-    required: true
+    required: true,
+    trim: true
+  },
+  owner: {
+    type: String,
+    required: true,
+    trim: true
   },
   createdAt: {
     type: Date,

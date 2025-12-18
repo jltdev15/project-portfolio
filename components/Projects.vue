@@ -1,5 +1,5 @@
 <template>
-  <section id="projects" class="relative py-24 bg-gradient-to-b from-white to-gray-50 overflow-hidden">
+  <section id="projects" class="relative py-24 bg-black overflow-hidden">
     <!-- Animated background pattern -->
     <div class="absolute inset-0 overflow-hidden pointer-events-none opacity-5">
       <div class="absolute inset-0" style="background-image: radial-gradient(circle at 1px 1px, rgb(203 213 225) 1px, transparent 0); background-size: 24px 24px;"></div>
@@ -7,8 +7,8 @@
 
     <!-- Animated accent elements -->
     <div class="absolute inset-0 overflow-hidden pointer-events-none">
-      <div class="absolute w-64 h-64 bg-gradient-to-br from-blue-500/10 to-purple-500/10 rounded-full blur-3xl -top-32 -right-32 animate-float-1"></div>
-      <div class="absolute w-64 h-64 bg-gradient-to-br from-purple-500/10 to-blue-500/10 rounded-full blur-3xl -bottom-32 -left-32 animate-float-2"></div>
+      <div class="absolute w-64 h-64 bg-[#1D9BF0]/5 rounded-full blur-3xl -top-32 -right-32 animate-float-1"></div>
+      <div class="absolute w-64 h-64 bg-[#1D9BF0]/5 rounded-full blur-3xl -bottom-32 -left-32 animate-float-2"></div>
     </div>
 
     <div class="container mx-auto px-4">
@@ -20,60 +20,59 @@
         ]"
       >
         <div class="text-center mb-16">
-          <h2 class="text-5xl font-bold mb-6 bg-clip-text text-transparent bg-gradient-to-r from-blue-600 to-purple-600">
+          <h2 class="text-5xl font-bold mb-6 text-[#F7F9F9]">
             Featured Projects
           </h2>
-          <div class="w-24 h-1 bg-gradient-to-r from-blue-600 to-purple-600 mx-auto rounded-full"></div>
-          <p class="text-xl text-gray-600 mt-6 max-w-2xl mx-auto">Explore my portfolio of innovative projects showcasing my expertise in web and mobile development</p>
+          <div class="w-24 h-1 bg-[#1D9BF0] mx-auto rounded-full"></div>
+          <p class="text-xl text-[#71767A] mt-6 max-w-2xl mx-auto">Explore my portfolio of innovative projects showcasing my expertise in web and mobile development</p>
         </div>
 
         <!-- Loading State -->
         <div v-if="loading" class="flex justify-center items-center min-h-[400px]">
-          <div class="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-blue-600"></div>
+          <div class="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-[#1D9BF0]"></div>
         </div>
 
         <!-- Error State -->
-        <div v-else-if="error" class="text-center text-red-600 py-8">
+        <div v-else-if="error" class="text-center text-[#F4212E] py-8">
           {{ error }}
         </div>
 
         <!-- Projects Grid -->
-        <div v-else class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+        <div v-else class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 items-stretch">
           <div 
             v-for="(project, index) in projects" 
             :key="index"
             :class="[
-              'group bg-white rounded-2xl overflow-hidden transform transition-all duration-500 hover:-translate-y-1 relative',
+              'group rounded-2xl overflow-hidden transform transition-all duration-500 hover:-translate-y-1 relative flex flex-col h-full',
               isVisible ? 'translate-y-0 opacity-100' : 'translate-y-10 opacity-0',
               `delay-${index * 200}`
             ]"
           >
-            <!-- Gradient Border Effect -->
-            <div class="absolute inset-0 rounded-2xl bg-gradient-to-r from-blue-500 to-purple-500 opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
-            <div class="absolute inset-[2px] rounded-[14px] bg-white"></div>
+            <!-- Border Effect -->
+            <div class="absolute inset-0 rounded-2xl border border-[#2F3336] group-hover:border-[#1D9BF0] transition-colors duration-500"></div>
             
-            <div class="relative">
+            <div class="relative bg-[#16181C] rounded-2xl flex flex-col h-full">
               <div class="relative overflow-hidden">
                 <img 
                   :src="project.image" 
                   :alt="project.title"
                   class="w-full h-56 object-cover transform transition-transform duration-700 group-hover:scale-110"
                 >
-                <div class="absolute inset-0 bg-gradient-to-br from-blue-600/90 to-purple-600/90 opacity-0 group-hover:opacity-100 transition-all duration-500 flex items-center justify-center">
+                <div class="absolute inset-0 bg-[#1D9BF0]/90 opacity-0 group-hover:opacity-100 transition-all duration-500 flex items-center justify-center">
                   <a 
                     :href="project.linkUrl" 
                     target="_blank" 
                     rel="noopener noreferrer"
-                    class="px-8 py-3 bg-white text-blue-600 rounded-full font-semibold transform hover:scale-105 transition-all duration-300 flex items-center space-x-2 border-2 border-transparent hover:border-blue-400"
+                    class="px-8 py-3 bg-white text-[#1D9BF0] rounded-full font-semibold transform hover:scale-105 transition-all duration-300 flex items-center space-x-2"
                   >
                     <span>View Project</span>
-                    <ArrowTopRightOnSquareIcon class="w-5 h-5" />
+                    <Icon name="lucide:external-link" class="w-5 h-5" />
                   </a>
                 </div>
               </div>
-              <div class="p-8">
-                <h3 class="text-2xl font-semibold mb-4 text-gray-900 group-hover:text-blue-600 transition-colors duration-300">{{ project.title }}</h3>
-                <p class="text-gray-600 mb-6 leading-relaxed text-justify">
+              <div class="p-8 flex flex-col flex-grow">
+                <h3 class="text-2xl font-semibold mb-4 text-[#F7F9F9] group-hover:text-[#1D9BF0] transition-colors duration-300">{{ project.title }}</h3>
+                <p class="text-[#71767A] mb-6 leading-relaxed text-justify flex-grow">
                   <span v-if="project.description.length > 150">
                     {{ project.description.substring(0, 150) }}...
                   </span>
@@ -83,7 +82,7 @@
                   <button 
                     v-if="project.description.length > 150"
                     @click="openModal(project)"
-                    class="text-blue-600 hover:text-blue-800 font-medium ml-1 transition-colors duration-300 focus:outline-none focus:underline"
+                    class="text-[#1D9BF0] hover:text-[#1a8cd8] font-medium ml-1 transition-colors duration-300 focus:outline-none focus:underline"
                   >
                     See more
                   </button>
@@ -92,7 +91,7 @@
                   <span 
                     v-for="(tech, techIndex) in project.technologies" 
                     :key="techIndex"
-                    class="px-4 py-1.5 bg-blue-50 text-blue-600 rounded-full text-sm font-medium hover:bg-blue-100 transition-colors duration-300"
+                    class="px-4 py-1.5 bg-[#2F3336] text-[#71767A] rounded-full text-sm font-medium hover:bg-[#181919] transition-colors duration-300"
                   >
                     {{ tech }}
                   </span>
@@ -110,18 +109,18 @@
         <div 
           v-if="selectedProject"
           @click.self="closeModal"
-          class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/50 backdrop-blur-sm"
+          class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 backdrop-blur-sm"
         >
-          <div class="bg-white rounded-2xl max-w-2xl w-full max-h-[90vh] overflow-hidden shadow-2xl transform transition-all">
+          <div class="bg-[#16181C] border border-[#2F3336] rounded-2xl max-w-2xl w-full max-h-[90vh] overflow-hidden shadow-2xl transform transition-all">
             <!-- Modal Header -->
-            <div class="relative bg-gradient-to-r from-blue-600 to-purple-600 p-6">
+            <div class="relative bg-[#1D9BF0] p-6">
               <h3 class="text-2xl font-bold text-white pr-8">{{ selectedProject.title }}</h3>
               <button
                 @click="closeModal"
                 class="absolute top-4 right-4 text-white hover:text-gray-200 transition-colors duration-300 focus:outline-none focus:ring-2 focus:ring-white rounded-full p-1"
                 aria-label="Close modal"
               >
-                <XMarkIcon class="w-6 h-6" />
+                <Icon name="lucide:x" class="w-6 h-6" />
               </button>
             </div>
 
@@ -131,17 +130,17 @@
                 <img 
                   :src="selectedProject.image" 
                   :alt="selectedProject.title"
-                  class="w-full h-64 object-cover rounded-lg mb-6"
+                  class="w-full h-64 object-cover rounded-lg mb-6 border border-[#2F3336]"
                 >
               </div>
-              <p class="text-gray-700 leading-relaxed text-justify mb-6">
+              <p class="text-[#71767A] leading-relaxed text-justify mb-6">
                 {{ selectedProject.description }}
               </p>
               <div class="flex flex-wrap gap-2 mb-6">
                 <span 
                   v-for="(tech, techIndex) in selectedProject.technologies" 
                   :key="techIndex"
-                  class="px-4 py-1.5 bg-blue-50 text-blue-600 rounded-full text-sm font-medium"
+                  class="px-4 py-1.5 bg-[#2F3336] text-[#71767A] rounded-full text-sm font-medium"
                 >
                   {{ tech }}
                 </span>
@@ -149,15 +148,15 @@
             </div>
 
             <!-- Modal Footer -->
-            <div class="px-6 py-4 bg-gray-50 border-t border-gray-200 flex justify-end">
+            <div class="px-6 py-4 border-t border-[#2F3336] flex justify-end">
               <a 
                 :href="selectedProject.linkUrl" 
                 target="_blank" 
                 rel="noopener noreferrer"
-                class="px-6 py-2 bg-gradient-to-r from-blue-600 to-purple-600 text-white rounded-full font-semibold hover:opacity-90 transition-opacity duration-300 flex items-center space-x-2"
+                class="px-6 py-2 bg-[#1D9BF0] text-white rounded-full font-semibold hover:bg-[#1a8cd8] transition-colors duration-300 flex items-center space-x-2"
               >
                 <span>View Project</span>
-                <ArrowTopRightOnSquareIcon class="w-5 h-5" />
+                <Icon name="lucide:external-link" class="w-5 h-5" />
               </a>
             </div>
           </div>
@@ -168,7 +167,6 @@
 </template>
 
 <script setup>
-import { ArrowTopRightOnSquareIcon, XMarkIcon } from '@heroicons/vue/24/outline'
 import { useScrollAnimation } from '../composables/useScrollAnimation'
 import { ref, onMounted, onUnmounted } from 'vue'
 
