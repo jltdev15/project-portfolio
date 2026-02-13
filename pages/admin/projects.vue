@@ -11,12 +11,6 @@
           >
             New Project
           </button>
-          <button
-            @click="handleLogout"
-            class="px-4 py-2 text-sm font-medium text-[#F7F9F9] rounded-full hover:bg-[#181919] transition-colors duration-150"
-          >
-            Logout
-          </button>
         </div>
       </div>
     </div>
@@ -43,7 +37,7 @@
     </div>
 
     <!-- Projects Grid -->
-    <div class="max-w-7xl mx-auto bg-black px-4">
+    <div class="max-w-7xl mx-auto bg-black px-4"  >
       <div class="sticky top-[105px] z-30 bg-black border-b border-[#2F3336] px-4 py-3 -mx-4">
         <div class="flex items-center justify-between">
           <h2 class="text-lg font-bold">Projects</h2>
@@ -516,27 +510,6 @@ const deleteProject = async (id: string) => {
     await fetchProjects()
   } catch (err) {
     console.error('Error deleting project:', err)
-  }
-}
-
-const handleLogout = async () => {
-  try {
-    const response = await fetch('/api/auth/logout', {
-      method: 'POST'
-    })
-
-    if (!response.ok) {
-      throw new Error('Logout failed')
-    }
-
-    // Clear local storage
-    localStorage.removeItem('user')
-    localStorage.removeItem('isAuthenticated')
-    
-    // Redirect to login page
-    router.push('/admin/auth')
-  } catch (err) {
-    console.error('Error logging out:', err)
   }
 }
 

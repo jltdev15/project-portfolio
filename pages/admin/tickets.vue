@@ -2,70 +2,14 @@
   <div class="min-h-screen bg-black text-[#F7F9F9]">
     <!-- Header Bar -->
     <div class="sticky top-0 z-50 bg-black border-b border-[#2F3336]">
-      <div class="container mx-auto px-4 py-3 flex items-center justify-between">
-        <div class="flex items-center space-x-4">
-          <h1 class="text-xl font-bold">Project Ticketing System</h1>
-        </div>
-        <div class="relative" ref="dropdownRef">
-          <!-- Avatar Button -->
-          <button
-            @click="toggleDropdown"
-            class="flex items-center space-x-3 px-3 py-2 rounded-full hover:bg-[#181919] transition-colors duration-150"
-            aria-label="User menu"
-          >
-            <div class="w-10 h-10 rounded-full bg-[#1D9BF0]/20 border-2 border-[#1D9BF0] flex items-center justify-center overflow-hidden">
-              <NuxtImg 
-                v-if="userInfo?.avatar" 
-                :src="userInfo.avatar" 
-                alt="Avatar"
-                class="w-full h-full object-cover"
-                preset="avatar"
-              />
-              <Icon 
-                v-else
-                name="lucide:user" 
-                class="w-6 h-6 text-[#1D9BF0]"
-              />
-            </div>
-            <div class="hidden md:block text-left">
-              <p class="text-sm font-medium text-[#F7F9F9]">{{ userInfo?.username || 'Admin' }}</p>
-              <p class="text-xs text-[#71767A]">{{ isAdmin ? 'Administrator' : 'User' }}</p>
-            </div>
-            <Icon 
-              name="lucide:chevron-down" 
-              class="w-4 h-4 text-[#71767A] transition-transform duration-200"
-              :class="{ 'rotate-180': isDropdownOpen }"
-            />
-          </button>
-
-          <!-- Dropdown Menu -->
-          <Transition name="dropdown">
-            <div
-              v-if="isDropdownOpen"
-              class="absolute right-0 mt-2 w-56 bg-[#16181C] border border-[#2F3336] rounded-lg shadow-xl overflow-hidden"
-            >
-              <div class="px-4 py-3 border-b border-[#2F3336]">
-                <p class="text-sm font-medium text-[#F7F9F9]">{{ userInfo?.username || 'Admin' }}</p>
-                <p class="text-xs text-[#71767A] mt-0.5">{{ userInfo?.email || 'admin@example.com' }}</p>
-              </div>
-              <div class="py-1">
-                <button
-                  @click="handleLogout"
-                  class="w-full px-4 py-2 text-left text-sm text-[#F7F9F9] hover:bg-[#181919] transition-colors duration-150 flex items-center space-x-2"
-                >
-                  <Icon name="lucide:log-out" class="w-4 h-4 text-[#F4212E]" />
-                  <span>Logout</span>
-                </button>
-              </div>
-            </div>
-          </Transition>
-        </div>
+      <div class="max-w-7xl mx-auto px-4 py-3">
+        <h1 class="text-xl font-bold">Project Ticketing System</h1>
       </div>
     </div>
 
     <!-- Breadcrumbs -->
     <div class="sticky top-[57px] z-40 bg-black border-b border-[#2F3336]">
-      <div class="container mx-auto px-4 py-3">
+      <div class="max-w-7xl mx-auto px-4 py-3">
         <nav class="flex items-center space-x-2 text-sm" aria-label="Breadcrumb">
           <NuxtLink
             to="/admin"
@@ -89,7 +33,7 @@
     </div>
 
     <!-- Projects List View -->
-    <div v-if="!selectedProject" class="container mx-auto bg-black px-4 py-6">
+    <div v-if="!selectedProject" class="max-w-7xl mx-auto bg-black px-4 py-6">
       <div class="sticky top-[105px] z-30 bg-black border-b border-[#2F3336] px-4 py-3 -mx-4 mb-4">
         <div class="flex items-center justify-between flex-wrap gap-4">
           <div>
@@ -223,7 +167,7 @@
     </div>
 
     <!-- Tickets View (when project is selected) -->
-    <div v-else class="max-w-7xl mx-auto bg-black px-4 py-6">
+    <div v-else class="container mx-auto bg-black px-4 py-6">
       <!-- Back Button -->
       <div class="mb-4">
         <button
@@ -774,23 +718,6 @@ definePageMeta({
 const router = useRouter()
 
 const userInfo = ref<any>(null)
-const isDropdownOpen = ref(false)
-const dropdownRef = ref<HTMLElement | null>(null)
-
-const toggleDropdown = () => {
-  isDropdownOpen.value = !isDropdownOpen.value
-}
-
-const closeDropdown = () => {
-  isDropdownOpen.value = false
-}
-
-// Close dropdown when clicking outside
-const handleClickOutside = (event: MouseEvent) => {
-  if (dropdownRef.value && !dropdownRef.value.contains(event.target as Node)) {
-    closeDropdown()
-  }
-}
 
 interface TicketForm {
   title: string
@@ -1152,25 +1079,6 @@ const deleteTicket = async (id: string) => {
   }
 }
 
-const handleLogout = async () => {
-  try {
-    const response = await fetch('/api/auth/logout', {
-      method: 'POST'
-    })
-
-    if (!response.ok) {
-      throw new Error('Logout failed')
-    }
-
-    localStorage.removeItem('user')
-    localStorage.removeItem('isAuthenticated')
-    
-    router.push('/admin/auth')
-  } catch (err) {
-    console.error('Error logging out:', err)
-  }
-}
-
 const openNewProjectModal = () => {
   projectForm.value = {
     linkUrl: '',
@@ -1372,9 +1280,6 @@ const handleEscape = (e: KeyboardEvent) => {
     } else if (showClientModal.value) {
       closeClientModal()
     }
-    if (isDropdownOpen.value) {
-      closeDropdown()
-    }
   }
 }
 
@@ -1399,12 +1304,10 @@ onMounted(async () => {
   }
   
   await fetchProjectsWithTicketing()
-  document.addEventListener('click', handleClickOutside)
   window.addEventListener('keydown', handleEscape)
 })
 
 onUnmounted(() => {
-  document.removeEventListener('click', handleClickOutside)
   window.removeEventListener('keydown', handleEscape)
 })
 </script>

@@ -75,18 +75,10 @@ export default defineEventHandler(async (event) => {
       })
     }
 
-    // GET - Get client user account for project
+    // GET - Get client user account for project (null when none exists)
     if (event.method === 'GET') {
       const clientUser = await User.findOne({ projectId, role: 'user' }).select('-password')
-      
-      if (!clientUser) {
-        throw createError({
-          statusCode: 404,
-          message: 'No client user account found for this project'
-        })
-      }
-      
-      return clientUser
+      return clientUser ?? null
     }
 
     // POST - Create client user account for project

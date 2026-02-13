@@ -2,9 +2,23 @@
   <div class="min-h-screen bg-black text-[#F7F9F9]">
     <!-- Header Bar -->
     <div class="sticky top-0 z-50 bg-black border-b border-[#2F3336]">
-      <div class="container mx-auto px-4 py-3 flex items-center justify-between">
+      <div class="max-w-7xl mx-auto px-4 py-3 flex items-center justify-between">
         <h1 class="text-xl font-bold">Admin Dashboard</h1>
-        <div class="relative" ref="dropdownRef">
+        <div class="flex items-center space-x-2">
+          <!-- Settings (Coming soon) -->
+          <button
+            type="button"
+            disabled
+            title="Coming soon"
+            class="p-2.5 rounded-full hover:bg-[#181919] transition-colors duration-150 opacity-50 cursor-not-allowed"
+            aria-label="Settings (coming soon)"
+          >
+            <svg class="w-6 h-6 text-[#71767A]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z" />
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+            </svg>
+          </button>
+          <div class="relative" ref="dropdownRef">
           <!-- Avatar Button -->
           <button
             @click="toggleDropdown"
@@ -64,6 +78,7 @@
               </div>
             </div>
           </Transition>
+          </div>
         </div>
       </div>
     </div>
@@ -162,21 +177,27 @@
             </div>
           </NuxtLink>
 
-          <!-- Settings Card (Placeholder for future) -->
-          <div class="border border-[#2F3336] rounded-lg p-6 hover:bg-[#181919] transition-all duration-150 opacity-50 cursor-not-allowed">
+          <!-- Project Billing Card (prefetch disabled so server auth doesn't redirect before client auth runs) -->
+          <NuxtLink
+            to="/admin/billing"
+            :prefetch="false"
+            class="border border-[#2F3336] rounded-lg p-6 hover:bg-[#181919] transition-all duration-150 group cursor-pointer"
+          >
             <div class="flex items-center space-x-4">
-              <div class="p-3 bg-[#2F3336] rounded-lg">
-                <svg class="w-6 h-6 text-[#71767A]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z" />
-                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+              <div class="p-3 bg-[#1D9BF0]/10 rounded-lg group-hover:bg-[#1D9BF0]/20 transition-colors">
+                <svg class="w-6 h-6 text-[#1D9BF0]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 14l6-6m-5 5l6-6M2 17h.01M6 17h.01M10 17h.01M14 17h.01M18 17h.01M2 7h.01M6 7h.01M10 7h.01M14 7h.01M18 7h.01M2 12h.01M6 12h.01M10 12h.01M14 12h.01M18 12h.01" />
                 </svg>
               </div>
               <div class="flex-1">
-                <h3 class="font-bold mb-1">Settings</h3>
-                <p class="text-sm text-[#71767A]">Coming soon</p>
+                <h3 class="font-bold mb-1">Project Billing</h3>
+                <p class="text-sm text-[#71767A]">Generate PDF billing for each project</p>
               </div>
+              <svg class="w-5 h-5 text-[#71767A] group-hover:text-[#1D9BF0] transition-colors" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
+              </svg>
             </div>
-          </div>
+          </NuxtLink>
         </div>
       </div>
 
